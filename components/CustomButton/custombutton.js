@@ -11,7 +11,7 @@ const Texto = styled.Text`
 `
 const ButtonStyle = styled.TouchableOpacity`
 padding: 10px;
-width: 120px;
+width: ${props =>  props.width ? props.width : '120px'};
 border-radius: 16px;
 align-items: center;
 background-color: black;
@@ -19,12 +19,12 @@ color: white;
 
 `
 
-const CustomButton = ({ title }) => {
+const CustomButton = (props) => {
  return(
     
-    <ButtonStyle  onPress={() => alert('funciona')}>
+    <ButtonStyle width={props.width} onPress={ props.onPress } >
       <View>
-        <Texto>{title}</Texto>
+        <Texto>{props.title}</Texto>
       </View>
       </ButtonStyle>
  )
