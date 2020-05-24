@@ -1,6 +1,6 @@
 import React from 'react'
 import {  StyleSheet, View, TouchableOpacity, Text } from 'react-native'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 // Styled Components parece que no se puede usar para botones :( por ahi deberiamos instalar react native elements tambien
 
@@ -17,12 +17,18 @@ align-items: center;
 background-color: black;
 color: white;
 
+${ props => props.google && css`
+  background-color: #4285F4; 
+  margin-top: 10px;
+  width: 250px;
+` }
+
 `
 
 const CustomButton = (props) => {
  return(
     
-    <ButtonStyle width={props.width} onPress={ props.onPress } >
+    <ButtonStyle google={props.google} width={props.width} onPress={ props.onPress } >
       <View>
         <Texto>{props.title}</Texto>
       </View>
