@@ -5,71 +5,86 @@ import { createStackNavigator } from 'react-navigation-stack'
 import LoginScreen from './screens/LoginScreen'
 import RegisterScreen from './screens/RegisterScreen'
 import HomeScreen from './screens/HomeScreen'
+import { Provider } from 'react-redux'
+import { store } from './redux/store'
+import { SignOut } from './components/sign-out/sign-out'
 
 import Test from './components/DrawerComponents/Test'
 import Button from './components/DrawerComponents/Button'
+import DrawerContent from './components/DrawerComponents/DrawerContent'
 
-const AuthStack = createStackNavigator({
-  login: {
-    screen: LoginScreen,
-    navigationOptions: {
-      header: null
-    }
-  },
-  register: {
-    screen: RegisterScreen,
-    navigationOptions: {
-      header: null
-    }
-  },
+const App = () => {
 
-})
-
-const TestStack = createStackNavigator({
-  test: { 
-    screen: Test,
-    navigationOptions: ({ navigation }) => ({
-      headerLeft: <Button navigation={navigation} />,
-      title: null
-    })
-  }
-})
-
-const AppStack = createStackNavigator({
-  home: {
-    screen: HomeScreen,
-    navigationOptions: ({ navigation }) => ({
-      headerLeft: <Button navigation={navigation} />,
-      title: null
-    })
-    }
-
+  const AuthStack = createStackNavigator({
+    login: {
+      screen: LoginScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
+    register: {
+      screen: RegisterScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
   
-})
-
-const DrawerNavigator = createDrawerNavigator({
-  home: AppStack,
-  test: TestStack,
-  //signOut: 
-}, {
-  initialRouteName: 'home',
-})
-
-export default createAppContainer(
-  createSwitchNavigator({
-    Auth: AuthStack,
-    App: AppStack,
-    Test: TestStack,
-    Drawer: DrawerNavigator
-  },
-  {
-    initialRouteName: 'Auth',
-    navigationOptions: {
-      gesturesEnabled: false,
-     
+  })
+  
+  const TestStack = createStackNavigator({
+    test: { 
+      screen: Test,
+      navigationOptions: ({ navigation }) => ({
+        headerLeft: <Button navigation={navigation} />,
+        title: null
+      })
     }
-
-  }
+  })
+  
+  const AppStack = createStackNavigator({
+    home: {
+      screen: HomeScreen,
+      navigationOptions: ({ navigation }) => ({
+        headerLeft: <Button navigation={navigation} />,
+        title: null
+      })
+      }
+  
+    
+  })
+  
+  const DrawerNavigator = createDrawerNavigator({
+    home: AppStack,
+    test: TestStack,
+    //signOut: SignOut 
+  }, {
+    initialRouteName: 'home',
+    contentComponent: props => <DrawerContent {...props} />
+  })
+  
+  const AppContainer = createAppContainer(
+    createSwitchNavigator({
+      Auth: AuthStack,
+      App: AppStack,
+      Test: TestStack,
+      Drawer: DrawerNavigator
+    },
+    {
+      initialRouteName: 'Auth',
+      navigationOptions: {
+        gesturesEnabled: false,
+       
+      }
+  
+    }
+    )
   )
-)
 
+  return(
+    <Provider store={store} >
+      <AppContainer />
+    </Provider>
+  )
+}
+
+export default App
