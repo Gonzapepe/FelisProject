@@ -97,7 +97,7 @@ class RegisterScreen extends Component {
 
         try {
             const { user } = await auth.createUserWithEmailAndPassword(email, password)
-
+            //ver video sobre firestore y react native
             await createUser(user, { displayName })
 
             this.setState({

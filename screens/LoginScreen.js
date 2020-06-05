@@ -74,7 +74,7 @@ export default class LoginScreen extends Component {
 
         try {
             
-            await auth.signInWithEmailAndPassword(email, password)
+             await auth.signInWithEmailAndPassword(email, password)
 
             this.setState({
                 email:'',
@@ -89,6 +89,8 @@ export default class LoginScreen extends Component {
     }
 
     render() {
+
+       
         const { navigation } = this.props
     return (
 
