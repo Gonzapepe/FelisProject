@@ -23,7 +23,7 @@ const App = () => {
     register: {
       screen: RegisterScreen,
       navigationOptions: {
-        header: null
+        headerShown: false
       }
     },
   

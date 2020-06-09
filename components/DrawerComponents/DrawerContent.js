@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, FlatList } from 'react-native'
 import { Content, Container, Header, Left, Body, List, ListItem, Icon } from 'native-base'
 import { Avatar } from 'react-native-paper'
-import { auth } from '../../firebase/config'
+import { auth, firestore } from '../../firebase/config'
 import styled from 'styled-components'
 
 
@@ -20,9 +20,53 @@ const logout = async () => {
     }    
 }
 
-const DrawerContent = (props) => (
+class  DrawerContent extends React.Component{
+
+    constructor(){
+        super()
+
+        this.state = {
+            email: '',
+            displayName: ''
+        }
+    }
+
+    componentDidMount() {
+        
+        const user = auth.currentUser
+        const dbData = firestore.collection('users').doc(`${user.uid}`)
+
+        // Encontrar una solucion para usar las promeas de .then()
+         dbData.get().then((doc) => {
+            if (doc.exists) {
+                const userEmail = doc.data().email
+                const userName = doc.data().displayName
+
+                this.setState({
+                    email: userEmail,
+                    displayName: userName
+                })
+
+            } else {
+                console.log('Ese documento no existe')
+            }
+        }).catch(err => console.log('Hubo un error: ', err))
+    }
+render(){
+
+
+return (
     <Container>
-        <Header style={styles.header} />
+        <Header style={styles.header} > 
+        
+            <Text>
+                {this.state.email}
+            </Text>
+            <Text>
+                {this.state.displayName}
+            </Text>
+
+        </Header>
 
         <Content>
             <FlatList data={ [
@@ -44,7 +88,8 @@ const DrawerContent = (props) => (
         </Content>
     </Container>
 )
-
+}
+}
 const styles = StyleSheet.create({
     header: {
         backgroundColor: '#3a455c',

@@ -32,36 +32,15 @@ class HomeScreen extends React.Component {
         }
     }
 
-
+   
     render() {
 
 
-        const db = firebase.firestore()
-        const user = auth.currentUser
-        const dbData = db.collection('users').doc(`${user.uid}`)
-
-        // Encontrar una solucion para usar las promeas de .then()
-         dbData.get().then((doc) => {
-            if (doc.exists) {
-                const userEmail = doc.data().email
-                const userName = doc.data().displayName
-
-                this.setState({
-                    email: userEmail,
-                    displayName: userName
-                })
-
-            } else {
-                console.log('Ese documento no existe')
-            }
-        }).catch(err => console.log('Hubo un error: ', err))
         return (
             <Body>
                 <BodyText> HomeScreen  </BodyText>
                 <View>
                     <Text>HOLA</Text>
-                    <Text>{this.state.email}</Text>
-                    <Text>{this.state.displayName}</Text>
                 </View>
             </Body>
         )
