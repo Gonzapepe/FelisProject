@@ -42,7 +42,6 @@ const Card = styled.View`
 `;
 
 export default class LoginScreen extends Component {
-
     constructor(){
         super()
 
@@ -78,37 +77,61 @@ export default class LoginScreen extends Component {
         event.preventDefault();
 
         const { email, password } = this.state;
+        const regularExp = new RegExp("@");
+
+        // ! Validacion
+        if(email.trim() === '' || password.trim() === ''){
+            this.setState({
+                errorValidation: true,
+                errorMessage: 'Rellene los campos correctamente',
+            });
+            
+            setTimeout(() => {
+                this.setState({
+                    errorValidation: false,
+                })  
+            }, 3000);
+
+            return;
+         }
+
+        // ! Validacion password
+        if(password.trim().length < 6 ){
+            this.setState({
+                errorValidation: true,
+                errorMessage: 'La contraseña debe tener al menos 6 dígitos',
+            });
+            
+            setTimeout(() => {
+                this.setState({
+                    errorValidation: false,
+                    errorMessage: '',
+                })  
+            }, 3000);
+
+            return;
+        }
+
         
+        if(!regularExp.test(email)){
+            this.setState({
+                errorValidation: true,
+                errorMessage: 'Email inválido'
+            });
+
+            setTimeout(() => {
+                this.setState({
+                    errorValidation: false,
+                    errorMessage: ''
+                });
+            }, 3000);
+
+            return;
+        }
+
+
         try {
-            // ! Validacion
-            if(email.trim() === '' || password.trim() === ''){
-                this.setState({
-                    errorValidation: true,
-                });
-                
-                setTimeout(() => {
-                    this.setState({
-                        errorValidation: false,
-                    })  
-                }, 3000);
-
-                return;
-            }
-
-            // ! Validacion password
-            if(password.trim().length < 6 ){
-                this.setState({
-                    errorMessage: 'La contraseña debe tener al menos 6 dígitos',
-                });
-                
-                setTimeout(() => {
-                    this.setState({
-                        errorMessage: '',
-                    })  
-                }, 3000);
-
-                return;
-            }
+          
             // ! Envio de datos
             await auth.signInWithEmailAndPassword(email, password);
 
@@ -123,11 +146,14 @@ export default class LoginScreen extends Component {
             this.props.navigation.navigate('home');
 
         } catch (err) {
+            alert('No existe el usuario ingresado', err);
+
             // ! Error
             this.setState({ 
                 error: true,
             });
-            
+      
+
             setTimeout(() => {
                 this.setState({ 
                     error: false,
@@ -146,10 +172,9 @@ export default class LoginScreen extends Component {
             <Card>
                 <Start>Bienvenido</Start>
 
-                <ErrorBox>
-                    {this.state.errorValidation ? <MessageError>Complete todos los campos correctamente</MessageError> : null}
-                    {this.state.error ? <MessageError>Los datos ingresados no son correctos</MessageError> : null}
-                </ErrorBox>
+                    <ErrorBox>
+                        {this.state.errorValidation ? <MessageError>{this.state.errorMessage}</MessageError> : null}
+                    </ErrorBox>
 
 
                     <Input 
@@ -167,7 +192,8 @@ export default class LoginScreen extends Component {
                         label='Email'
                         labelStyle={{
                             color: 'white'
-                        }}                  
+                        }}    
+                        keyboardType='email-address'              
                     />
       
                     <Input
@@ -181,8 +207,7 @@ export default class LoginScreen extends Component {
                         label='Contraseña'
                         labelStyle={{
                             color: 'white'
-                        }}          
-                        errorMessage={this.state.errorMessage}     
+                        }}              
                     />
                     
                 <ButtonContainer>
