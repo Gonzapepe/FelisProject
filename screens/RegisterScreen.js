@@ -3,8 +3,10 @@ import { View, Text, TextInput, Linking } from 'react-native'
 import styled from 'styled-components'
 import CustomButton from '../components/CustomButton/custombutton'
 import { auth, createUser } from '../firebase/config';
+import { LinearGradient } from "expo-linear-gradient";
 
 
+// ! Styled Components
 const CardForm = styled.View`
     display: flex;
     margin-bottom: 20px;
@@ -32,8 +34,6 @@ const Input = styled.TextInput`
     margin-left: 2px;
   }
 `
-
-
 
 const ButtonContainer = styled.View`
   margin-top: 20px;
@@ -69,6 +69,8 @@ const Card = styled.View`
 `
 
 class RegisterScreen extends Component {
+
+    // ! Constructor del state
     constructor() {
         super()
 
@@ -81,69 +83,74 @@ class RegisterScreen extends Component {
     }
 
     
-    // Para enviar formularios, se usa onPress, y se llama en el boton, ya que no existe el tag de <form>
+    // ! Para enviar formularios, se usa onPress, y se llama en el boton, ya que no existe el tag de <form>
 
     handleSubmit = async event => {
         event.preventDefault()
 
         const { email, displayName, password, confirmPassword } = this.state
-
+         
+        // ! Validación
         if(password !== confirmPassword) {
             alert('Las contraseñas no son iguales. Por favor, intentalo de nuevo')
             return
         }
 
+
         const { navigation } = this.props
 
+        // ! Enviar a la base de datos
         try {
-            const { user } = await auth.createUserWithEmailAndPassword(email, password)
-            //ver video sobre firestore y react native
+            const { user } = await auth.createUserWithEmailAndPassword(email, password);
+
+            // ! ver video sobre firestore y react native
             await createUser(user, { displayName })
 
+            // ! Reseteo del form
             this.setState({
                 displayName: '',
                 email: '',
                 password: '',
                 confirmPassword: ''
 
-            })
+            });
 
-            navigation.navigate('home')
+            navigation.navigate('home');
+
+            // ! Si hubo error
         } catch (err) {
-            console.log('hubo un error: ', err)
+            console.log('hubo un error: ', err);
         }
 
     }
 
     render(){
-
         return (
-            <Card>
-            <Start>Bienvenido</Start>
-            <CardForm>
-                <Span>Nombre de usuario</Span>
-                <Input onChangeText={displayName => this.setState({ displayName })} value={this.state.displayName} />
-                <Span>Email</Span>
-                <Input onChangeText={email => this.setState({ email })} value={this.state.email} />
-                <Span>Contraseña</Span>
-                <Input secureTextEntry={ true } onChangeText={password => this.setState({ password })} value={this.state.password}  />
-                <Span>Confirmar contraseña</Span>
-                <Input secureTextEntry={ true } onChangeText={confirmPassword => this.setState({ confirmPassword })} type='password' value={this.state.confirmPassword} />
+            <LinearGradient colors={['#005AA7', '#FFFDE4']}>
+                <Card>
+                        <Start>Bienvenido</Start>
+                        <CardForm>
+                            <Span>Nombre de usuario</Span>
+                            <Input onChangeText={displayName => this.setState({ displayName })} value={this.state.displayName} />
+                            <Span>Email</Span>
+                            <Input onChangeText={email => this.setState({ email })} value={this.state.email} />
+                            <Span>Contraseña</Span>
+                            <Input secureTextEntry={ true } onChangeText={password => this.setState({ password })} value={this.state.password}  />
+                            <Span>Confirmar contraseña</Span>
+                            <Input secureTextEntry={ true } onChangeText={confirmPassword => this.setState({ confirmPassword })} type='password' value={this.state.confirmPassword} />
+                        </CardForm> 
 
-               
-            </CardForm> 
+                        <ButtonContainer>
+                            <CustomButton width='250px' title='Registrarse' onPress={  this.handleSubmit } />
+                        </ButtonContainer>
 
-            <ButtonContainer>
-                <CustomButton width='250px' title='Registrarse' onPress={  this.handleSubmit } />
-            </ButtonContainer>
-
-            <LoginTextContainer>
-            <LoginText> ¿Ya tenés cuenta?  </LoginText>
-            <SecondText onPress={() => this.props.navigation.navigate('login')} >Inicia sesión</SecondText>
-            </LoginTextContainer>
-        </Card>
-        )
-    }
+                        <LoginTextContainer>
+                        <LoginText> ¿Ya tenés cuenta?  </LoginText>
+                        <SecondText onPress={() => this.props.navigation.navigate('login')} >Inicia sesión</SecondText>
+                        </LoginTextContainer>
+                </Card>
+            </LinearGradient>
+        )}
 }
 
-export default RegisterScreen
+export default RegisterScreen;

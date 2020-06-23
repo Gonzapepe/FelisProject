@@ -1,4 +1,5 @@
 import React from 'react'
+import { StyleSheet } from 'react-native';
 import { createDrawerNavigator } from 'react-navigation-drawer'
 import {  createAppContainer, createSwitchNavigator } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
@@ -80,7 +81,7 @@ const App = () => {
 
   return(
     <Provider store={store} >
-      <AppContainer />
+        <AppContainer />
     </Provider>
   )
 }

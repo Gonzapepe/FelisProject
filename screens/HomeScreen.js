@@ -16,13 +16,12 @@ const Body = styled.View`
 const BodyText = styled.Text`
     font-size: 20px;
     font-weight: bold;
+    text-align: center;
 `
 
 
 
 class HomeScreen extends React.Component {
-
-
     constructor() {
         super()
 
@@ -40,7 +39,7 @@ class HomeScreen extends React.Component {
             <Body>
                 <BodyText> HomeScreen  </BodyText>
                 <View>
-                    <Text>HOLA</Text>
+                    <Text> Hola Mundo </Text>
                 </View>
             </Body>
         )

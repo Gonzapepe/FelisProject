@@ -20,7 +20,7 @@ const logout = async () => {
     }    
 }
 
-class  DrawerContent extends React.Component{
+class DrawerContent extends React.Component{
 
     constructor(){
         super()
