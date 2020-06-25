@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
+
+import { auth } from '../firebase/config';
+
+import LoadingScreen from './LoadingScreen';
+import { View, Animated } from 'react-native';
+
 import styled from 'styled-components';
-import { auth } from '../firebase/config'
-import CustomButton from '../components/CustomButton/custombutton'
+import CustomButton from '../components/CustomButton/custombutton';
 import { LinearGradient } from "expo-linear-gradient";
 import { Input } from 'react-native-elements';
 
@@ -9,6 +14,7 @@ import { Input } from 'react-native-elements';
 const Start = styled.Text`
     font-weight: bold;
     font-size: 36px;
+    color: white;
 `;
 
 //
@@ -46,16 +52,37 @@ export default class LoginScreen extends Component {
         super()
 
         this.state = {
+            LogoAnime: new Animated.Value(0),
             email:'',
             password:'',
+            loading: true,
             error: false,
             errorValidation: false,
-            errorMessage: ''
+            errorMessage: '',
         }
 
         this.handleEmail = this.handleEmail.bind(this);
         this.handlePassword = this.handlePassword.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+    
+    componentDidMount() {
+        setTimeout(() => {
+            this.setState({
+                loading: false
+            })
+        }, 3500);
+    }
+
+    componentWillUpdate(){
+        Animated.parallel([
+            Animated.spring(this.state.LogoAnime, {
+                toValue: 1,
+                tension: 10,
+                friction: 2,
+                duration: 1000,
+            })
+        ]).start()
     }
 
     // ! handleChange email
@@ -167,58 +194,74 @@ export default class LoginScreen extends Component {
     render() {
         const { navigation } = this.props
 
-    return (
-        <LinearGradient colors={['#005AA7', '#FFFDE4']}>
-            <Card>
-                <Start>Bienvenido</Start>
-
-                    <ErrorBox>
-                        {this.state.errorValidation ? <MessageError>{this.state.errorMessage}</MessageError> : null}
-                    </ErrorBox>
-
-
-                    <Input 
-                        inputContainerStyle={{
-                            borderBottomColor: 'black'
-                        }}
-                        inputStyle={{
-                            color: 'black'
-                        }}
-                        onChangeText={
-                            this.handleEmail
-                        } 
-                        value={this.state.email}
-                        placeholder = "Inserte su email"
-                        label='Email'
-                        labelStyle={{
-                            color: 'white'
-                        }}    
-                        keyboardType='email-address'              
-                    />
-      
-                    <Input
-                        inputContainerStyle={{
-                            borderBottomColor: 'black'
-                        }}
-                        secureTextEntry={true} 
-                        onChangeText={this.handlePassword} 
-                        value={this.state.password} 
-                        placeholder = "Inserte su contraseña"
-                        label='Contraseña'
-                        labelStyle={{
-                            color: 'white'
-                        }}              
-                    />
+        if(this.state.loading) {
+            return (
+                <LoadingScreen />
+            )
+            
+        } else {
+            return (
+                <LinearGradient colors={['#1D2671', '#C33764']}>
+                    <Animated.View style={{
+                        opacity: this.state.LogoAnime,
+                        top: this.state.LogoAnime.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [0, 10]
+                        })
+                    }}>
                     
-                <ButtonContainer>
-                    <CustomButton title='Iniciar sesión' onPress={ this.handleSubmit } />
-                    <CustomButton title='Registrarse' onPress={() => navigation.navigate('register')} />
-                </ButtonContainer>
-
-
-            </Card>
-        </LinearGradient>
-    );
+                    <Card>
+                        <Start>Bienvenido</Start>
+        
+                            <ErrorBox>
+                                {this.state.errorValidation ? <MessageError>{this.state.errorMessage}</MessageError> : null}
+                            </ErrorBox>
+        
+        
+                            <Input 
+                                inputContainerStyle={{
+                                    borderBottomColor: 'black'
+                                }}
+                                inputStyle={{
+                                    color: 'black'
+                                }}
+                                onChangeText={
+                                    this.handleEmail
+                                } 
+                                value={this.state.email}
+                                placeholder = "Inserte su email"
+                                label='Email'
+                                labelStyle={{
+                                    color: 'white'
+                                }}    
+                                keyboardType='email-address'              
+                            />
+              
+                            <Input
+                                inputContainerStyle={{
+                                    borderBottomColor: 'black'
+                                }}
+                                secureTextEntry={true} 
+                                onChangeText={this.handlePassword} 
+                                value={this.state.password} 
+                                placeholder = "Inserte su contraseña"
+                                label='Contraseña'
+                                labelStyle={{
+                                    color: 'white'
+                                }}              
+                            />
+                            
+                        <ButtonContainer>
+                            <CustomButton title='Iniciar sesión' onPress={ this.handleSubmit } />
+                            <CustomButton title='Registrarse' onPress={() => navigation.navigate('register')} />
+                        </ButtonContainer>
+        
+        
+                    </Card>
+                    </Animated.View>
+                </LinearGradient>
+            );
+        }
 }
 }
 

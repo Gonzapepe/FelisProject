@@ -11,8 +11,19 @@ import { store } from './redux/store'
 import Test from './components/DrawerComponents/Test'
 import Button from './components/DrawerComponents/Button'
 import DrawerContent from './components/DrawerComponents/DrawerContent'
+import LoadingScreen from './screens/LoadingScreen';
 
 const App = () => {
+
+  const LoadingStack = createStackNavigator({
+    loading: {
+      screen: LoadingScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
+  })
+
 
   const AuthStack = createStackNavigator({
     login: {
@@ -75,8 +86,7 @@ const App = () => {
        
       }
   
-    }
-    )
+    })
   )
 
   return(

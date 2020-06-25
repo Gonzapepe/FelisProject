@@ -13,6 +13,7 @@ import { Input } from 'react-native-elements';
 const Start = styled.Text`
     font-weight: bold;
     font-size: 36px;
+    color: white;
 `;
 
 const ErrorBox = styled.View`
@@ -183,7 +184,7 @@ class RegisterScreen extends Component {
 
     render(){
         return (
-            <LinearGradient colors={['#005AA7', '#FFFDE4']}>
+            <LinearGradient colors={['#1D2671', '#C33764']}>
                 <Card>
                         <Start>Bienvenido</Start>
 
