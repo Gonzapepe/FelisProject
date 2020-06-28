@@ -1,5 +1,4 @@
 import React from 'react'
-import { StyleSheet } from 'react-native';
 import { createDrawerNavigator } from 'react-navigation-drawer'
 import {  createAppContainer, createSwitchNavigator } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
@@ -11,7 +10,11 @@ import { store } from './redux/store'
 import Test from './components/DrawerComponents/Test'
 import Button from './components/DrawerComponents/Button'
 import DrawerContent from './components/DrawerComponents/DrawerContent'
+<<<<<<< Updated upstream
 import LoadingScreen from './screens/LoadingScreen';
+=======
+import ConfigScreen from './screens/ConfigScreen'
+>>>>>>> Stashed changes
 
 const App = () => {
 
@@ -29,7 +32,7 @@ const App = () => {
     login: {
       screen: LoginScreen,
       navigationOptions: {
-        header: null
+        headerShown: false
       }
     },
     register: {
@@ -45,27 +48,36 @@ const App = () => {
     test: { 
       screen: Test,
       navigationOptions: ({ navigation }) => ({
-        headerLeft: <Button navigation={navigation} />,
+        headerLeft: () => <Button navigation={navigation} />,
         title: null
+        
       })
     }
   })
   
+  const ConfigStack = createStackNavigator({
+    config: {
+      screen: ConfigScreen,
+    }
+  })
+
   const AppStack = createStackNavigator({
     home: {
       screen: HomeScreen,
       navigationOptions: ({ navigation }) => ({
-        headerLeft: <Button navigation={navigation} />,
+        headerLeft: () =>  <Button navigation={navigation} />,
         title: null
       })
       }
   
     
   })
+
   
   const DrawerNavigator = createDrawerNavigator({
     home: AppStack,
     test: TestStack,
+    config: ConfigStack
     //signOut: SignOut 
   }, {
     initialRouteName: 'home',
@@ -77,6 +89,7 @@ const App = () => {
       Auth: AuthStack,
       App: AppStack,
       Test: TestStack,
+      Config: ConfigStack,
       Drawer: DrawerNavigator
     },
     {

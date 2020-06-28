@@ -37,10 +37,7 @@ class HomeScreen extends React.Component {
 
         return (
             <Body>
-                <BodyText> HomeScreen  </BodyText>
-                <View>
-                    <Text> Hola Mundo </Text>
-                </View>
+                
             </Body>
         )
     }
