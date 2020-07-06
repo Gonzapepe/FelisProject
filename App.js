@@ -10,11 +10,10 @@ import { store } from './redux/store'
 import Test from './components/DrawerComponents/Test'
 import Button from './components/DrawerComponents/Button'
 import DrawerContent from './components/DrawerComponents/DrawerContent'
-<<<<<<< Updated upstream
+
 import LoadingScreen from './screens/LoadingScreen';
-=======
 import ConfigScreen from './screens/ConfigScreen'
->>>>>>> Stashed changes
+
 
 const App = () => {
 
@@ -22,7 +21,7 @@ const App = () => {
     loading: {
       screen: LoadingScreen,
       navigationOptions: {
-        header: null
+        headerShown: false
       }
     },
   })
