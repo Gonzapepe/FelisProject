@@ -9,9 +9,9 @@
   },
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.10",
+    "axios": "^0.19.2",
     "expo": "~37.0.3",
     "expo-linear-gradient": "~8.1.0",
-    "firebase": "7.9.0",
     "native-base": "^2.13.12",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
@@ -30,11 +30,13 @@
     "react-navigation-stack": "^2.4.0",
     "react-redux": "^7.2.0",
     "redux": "^4.0.5",
+    "socket.io-client": "^2.3.0",
     "styled-components": "^5.1.0"
   },
   "devDependencies": {
     "babel-preset-expo": "~8.1.0",
     "@babel/core": "^7.8.6"
   },
-  "private": true
+  "private": true,
+  "proxy": "http://192.168.0.17:3000"
 }
