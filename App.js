@@ -10,6 +10,7 @@ import { store } from './redux/store'
 import Test from './components/DrawerComponents/Test'
 import Button from './components/DrawerComponents/Button'
 import DrawerContent from './components/DrawerComponents/DrawerContent'
+import chatScreen from './screens/chatScreen'
 
 import LoadingScreen from './screens/LoadingScreen';
 import ConfigScreen from './screens/ConfigScreen'
@@ -40,20 +41,20 @@ const App = () => {
         headerShown: false
       }
     },
-  
+
   })
-  
+
   const TestStack = createStackNavigator({
-    test: { 
+    test: {
       screen: Test,
       navigationOptions: ({ navigation }) => ({
         headerLeft: () => <Button navigation={navigation} />,
         title: null
-        
+
       })
     }
   })
-  
+
   const ConfigStack = createStackNavigator({
     config: {
       screen: ConfigScreen,
@@ -67,22 +68,29 @@ const App = () => {
         headerLeft: () =>  <Button navigation={navigation} />,
         title: null
       })
-      }
-  
-    
+      },
+    chat:{
+      screen:chatScreen,
+      navigationOptions: ({navigation}) =>({
+        headerLeft: ()=><Button navigation={navigation} />,
+        title: null
+      })
+    }
+
+
   })
 
-  
+
   const DrawerNavigator = createDrawerNavigator({
     home: AppStack,
     test: TestStack,
     config: ConfigStack
-    //signOut: SignOut 
+    //signOut: SignOut
   }, {
     initialRouteName: 'home',
     contentComponent: props => <DrawerContent {...props} />
   })
-  
+
   const AppContainer = createAppContainer(
     createSwitchNavigator({
       Auth: AuthStack,
@@ -95,9 +103,9 @@ const App = () => {
       initialRouteName: 'Auth',
       navigationOptions: {
         gesturesEnabled: false,
-       
+
       }
-  
+
     })
   )
 

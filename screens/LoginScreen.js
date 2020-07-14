@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-import { auth } from '../firebase/config';
 
 import LoadingScreen from './LoadingScreen';
 import { View, Animated } from 'react-native';
@@ -9,7 +8,9 @@ import styled from 'styled-components';
 import CustomButton from '../components/CustomButton/custombutton';
 import { LinearGradient } from "expo-linear-gradient";
 import { Input } from 'react-native-elements';
+import axios from 'axios';
 
+import io from 'socket.io-client'
 
 const Start = styled.Text`
     font-weight: bold;
@@ -65,8 +66,11 @@ export default class LoginScreen extends Component {
         this.handlePassword = this.handlePassword.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
-    
+
+
     componentDidMount() {
+
+
         setTimeout(() => {
             this.setState({
                 loading: false
@@ -98,7 +102,7 @@ export default class LoginScreen extends Component {
             password: text,
         });
     }
-    
+
     // ! Enviar la informacion
     handleSubmit = async event => {
         event.preventDefault();
@@ -112,11 +116,11 @@ export default class LoginScreen extends Component {
                 errorValidation: true,
                 errorMessage: 'Rellene los campos correctamente',
             });
-            
+
             setTimeout(() => {
                 this.setState({
                     errorValidation: false,
-                })  
+                })
             }, 3000);
 
             return;
@@ -128,18 +132,18 @@ export default class LoginScreen extends Component {
                 errorValidation: true,
                 errorMessage: 'La contraseña debe tener al menos 6 dígitos',
             });
-            
+
             setTimeout(() => {
                 this.setState({
                     errorValidation: false,
                     errorMessage: '',
-                })  
+                })
             }, 3000);
 
             return;
         }
 
-        
+
         if(!regularExp.test(email)){
             this.setState({
                 errorValidation: true,
@@ -158,9 +162,16 @@ export default class LoginScreen extends Component {
 
 
         try {
-          
-            // ! Envio de datos
-            await auth.signInWithEmailAndPassword(email, password);
+
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+
+            const body = JSON.stringify({ email, password });
+
+            const res = await axios.post('http://192.168.0.17:3000/login', body, config)
 
             // ! Reseteo de formulario
             this.setState({
@@ -170,19 +181,19 @@ export default class LoginScreen extends Component {
                 errorMessage: null
             });
 
-            this.props.navigation.navigate('home');
+            this.props.navigation.navigate('home', {token: res.data.token});
 
         } catch (err) {
             alert('No existe el usuario ingresado', err);
 
             // ! Error
-            this.setState({ 
+            this.setState({
                 error: true,
             });
-      
+
 
             setTimeout(() => {
-                this.setState({ 
+                this.setState({
                     error: false,
                 });
             }, 2500);
@@ -198,7 +209,7 @@ export default class LoginScreen extends Component {
             return (
                 <LoadingScreen />
             )
-            
+
         } else {
             return (
                 <LinearGradient colors={['#1D2671', '#C33764']}>
@@ -209,16 +220,16 @@ export default class LoginScreen extends Component {
                             outputRange: [0, 10]
                         })
                     }}>
-                    
+
                     <Card>
                         <Start>Bienvenido</Start>
-        
+
                             <ErrorBox>
                                 {this.state.errorValidation ? <MessageError>{this.state.errorMessage}</MessageError> : null}
                             </ErrorBox>
-        
-        
-                            <Input 
+
+
+                            <Input
                                 inputContainerStyle={{
                                     borderBottomColor: 'black'
                                 }}
@@ -227,36 +238,36 @@ export default class LoginScreen extends Component {
                                 }}
                                 onChangeText={
                                     this.handleEmail
-                                } 
+                                }
                                 value={this.state.email}
                                 placeholder = "Inserte su email"
                                 label='Email'
                                 labelStyle={{
                                     color: 'white'
-                                }}    
-                                keyboardType='email-address'              
+                                }}
+                                keyboardType='email-address'
                             />
-              
+
                             <Input
                                 inputContainerStyle={{
                                     borderBottomColor: 'black'
                                 }}
-                                secureTextEntry={true} 
-                                onChangeText={this.handlePassword} 
-                                value={this.state.password} 
+                                secureTextEntry={true}
+                                onChangeText={this.handlePassword}
+                                value={this.state.password}
                                 placeholder = "Inserte su contraseña"
                                 label='Contraseña'
                                 labelStyle={{
                                     color: 'white'
-                                }}              
+                                }}
                             />
-                            
+
                         <ButtonContainer>
                             <CustomButton title='Iniciar sesión' onPress={ this.handleSubmit } />
                             <CustomButton title='Registrarse' onPress={() => navigation.navigate('register')} />
                         </ButtonContainer>
-        
-        
+
+
                     </Card>
                     </Animated.View>
                 </LinearGradient>

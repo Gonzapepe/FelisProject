@@ -2,10 +2,10 @@ import React from 'react'
 import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, FlatList } from 'react-native'
 import { Avatar } from 'react-native-elements'
 import { Content, Container, Header, Left, Body, List, ListItem, Icon } from 'native-base'
-import { auth, firestore } from '../../firebase/config'
 import styled from 'styled-components'
 import { YellowBox } from 'react-native'
 import _ from 'lodash'
+import axios from 'axios'
 
 YellowBox.ignoreWarnings(['Setting a timer']);
 const _console = _.clone(console);
@@ -29,40 +29,35 @@ class DrawerContent extends React.Component{
         this.state = {
             email: '',
             displayName: '',
-            
+
         }
     }
 
-    componentDidMount() {
-        
-        const user = auth.currentUser
-        const dbData = firestore.collection('users').doc(`${user.uid}`)
 
         // Encontrar una solucion para usar las promesas de .then()
-         dbData.get().then((doc) => {
-            if (doc.exists) {
-                const userEmail = doc.data().email
-                const userName = doc.data().displayName
 
-                this.setState({
-                    email: userEmail,
-                    displayName: userName
-                })
+     componentDidMount() {
 
-            } else {
-                console.log('Ese documento no existe')
-            }
-        }).catch(err => console.log('Hubo un error: ', err))
+        console.log(this.props)
+
+        //const config = {
+            //headers: {
+                //'x-auth-token':
+           // }
+       // }
+
+        //const res = await axios.get('http://192.168.0.17:3000/home')
+        console.log(res)
     }
+
 render(){
+
     const logout = async () => {
         try {
-            await auth.signOut()
-            this.props.navigation.navigate('Auth')
-    
+
         } catch (err) {
             console.log(err)
-        }    
+        }
     }
 
 return (
@@ -70,14 +65,14 @@ return (
 
         <Header style={styles.header} >
             <View style={styles.avatarStyle}>
-            <Avatar 
-            showAccessory 
-            onPress={() => console.log('Funciona')} 
-            activeOpacity={0.7} 
-            size='medium' 
-            rounded 
+            <Avatar
+            showAccessory
+            onPress={() => console.log('Funciona')}
+            activeOpacity={0.7}
+            size='medium'
+            rounded
             icon={{name: 'user', type: 'font-awesome'}}
-            
+
             />
             </View>
             <View style={styles.insideHeader}>
@@ -93,14 +88,14 @@ return (
 
         <Content>
             <FlatList data={ [
-                 { title: 'Home', icon: 'home', route: 'home'}, { title: 'Test', icon: 'log-in', route: 'test'}, 
+                 { title: 'Home', icon: 'home', route: 'home'}, { title: 'Test', icon: 'log-in', route: 'test'},
                  { title: 'Configuración', icon: 'cog', route: 'config' }
-            ]} 
+            ]}
             renderItem={ ({ item }) => (
                <ListItem  noBorder style={ styles.ListItem } onPress={ () =>  this.props.navigation.navigate(item.route)} >
                    <Icon name={item.icon} type='FontAwesome' style={ styles.Icon }/>
                    <TextList>{item.title}</TextList>
-               </ListItem> 
+               </ListItem>
             ) }
             />
 
@@ -127,7 +122,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         marginRight: 40,
         marginTop: 5
-    },  
+    },
     ListItem: {
         justifyContent: "flex-start",
         backgroundColor: 'transparent'

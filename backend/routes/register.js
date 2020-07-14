@@ -19,13 +19,13 @@ router.post('/', [
     }
 
     if(req.body.password !== req.body.confirmPassword){
-        res.status(400).send('Las contraseñas no son iguales.')
+        res.status(400).json({ error: 'Las contraseñas no son iguales.' })
     }
     const { email, password, name } = req.body
   try {
       const existentUser = await User.findOne({ email })
     if(existentUser){
-        return res.status(400).send('El usuario ya existe.')
+        return res.status(400).json({ error: 'El usuario ya existe.' })
     }
     const salt = await bcrypt.genSalt(10)
     const hashedPassword = await bcrypt.hash(password, salt)

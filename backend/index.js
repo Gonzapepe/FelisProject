@@ -7,6 +7,8 @@ const register = require('./routes/register')
 const home = require('./routes/home')
 const server = require('http').createServer(app)
 const io = require('socket.io').listen(server)
+const cors = require('cors')
+const bodyParser = require('body-parser')
 require('dotenv').config()
 
 
@@ -15,16 +17,20 @@ require('dotenv').config()
 io.on('connection' , socket => {
     console.log('Socket connection')
 
-    socket.emit('messagesChat' , (messages)=>{
-        console.log('message:'+ messages);
+    socket.on('messagesChat' , (messages)=>{
+
+        io.emit('messagesChat', messages)
+        console.log(messages)
     })
 })
 
 
 //settings
 
-app.use(express.urlencoded({ extended: false }))
-app.use(express.json())
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+app.use(cors({ origin: true, credentials: true }))
+
 //conexion a base de datos
 mongoose.connect(process.env.DATABASE, { useNewUrlParser: true, useUnifiedTopology: true })
 
@@ -41,14 +47,10 @@ app.use(morgan('dev'))
 app.use('/login', login)
 app.use('/register', register)
 app.use('/home', home)
-app.use('/', (req, res) => {
-    res.send('hola')
-})
-
 const puerto = 3000 || process.env.PORT
 
 server.listen(puerto, () => {
     console.log('Corriendo en el puerto: ', puerto)
 });
 
-module.exports =  app, io ;
+module.exports =  app ;

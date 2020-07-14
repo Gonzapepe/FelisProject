@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { View, Text } from 'react-native'
+import { View, Text ,Button} from 'react-native'
 import styled from 'styled-components'
-import firebase, { auth, firestore } from '../firebase/config'
+import axios from 'axios'
 
 
 const Body = styled.View`
@@ -22,22 +22,38 @@ const BodyText = styled.Text`
 
 
 class HomeScreen extends React.Component {
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
 
         this.state = {
             email: '',
-            displayName: ''
+            displayName: '',
+            token: ''
         }
     }
 
-   
+    async componentDidMount() {
+
+        console.log(this.props.navigation.state.params.token)
+        const { token } = this.props.navigation.state.params
+
+        const config = {
+            headers: {
+                'x-auth-token': token
+            }
+
+        }
+
+        await axios.get('http://192.168.0.17/home', config)
+    }
+
+
     render() {
 
 
         return (
             <Body>
-                
+                <Button onPress={ () => this.props.navigation.navigate('chat') } title='Chat' ></Button>
             </Body>
         )
     }

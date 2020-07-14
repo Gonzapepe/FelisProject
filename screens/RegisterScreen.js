@@ -3,10 +3,10 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import CustomButton from '../components/CustomButton/custombutton';
 
-import { auth, createUser } from '../firebase/config';
 import { LinearGradient } from "expo-linear-gradient";
 
 import { Input } from 'react-native-elements';
+import axios from 'axios';
 
 
 // ! Styled Components
@@ -43,7 +43,7 @@ const LoginText = styled.Text`
 const LoginTextContainer = styled.View`
     margin-top: 45px;
     display: flex;
-    flex-direction: row; 
+    flex-direction: row;
 `;
 
 const SecondText = styled.Text`
@@ -59,7 +59,7 @@ const Card = styled.View`
   margin-top: 12%;
   align-items: center;
   flex-direction: column;
-  
+
 `;
 
 class RegisterScreen extends Component {
@@ -78,14 +78,13 @@ class RegisterScreen extends Component {
         }
     }
 
-    
+
     // ! Para enviar formularios, se usa onPress, y se llama en el boton, ya que no existe el tag de <form>
 
     handleSubmit = async event => {
         event.preventDefault()
 
         const { email, displayName, password, confirmPassword } = this.state
-        
         const regularExp = new RegExp("@");
 
         // ! Validación
@@ -94,7 +93,7 @@ class RegisterScreen extends Component {
                 error: true,
                 errMensaje: 'Rellene los campos correctamente'
             });
-           
+
             setTimeout(() => {
                 this.setState({
                     error: true,
@@ -110,7 +109,7 @@ class RegisterScreen extends Component {
                 error: true,
                 errMensaje: 'La contraseña debe tener al menos 6 dígitos'
             });
-           
+
             setTimeout(() => {
                 this.setState({
                     error: true,
@@ -126,14 +125,14 @@ class RegisterScreen extends Component {
                 error: true,
                 errMensaje: 'Las contraseñas deben ser iguales'
             });
-           
+
             setTimeout(() => {
                 this.setState({
                     error: true,
                     errMensaje: ''
                 });
             }, 3000);
-            
+
             return;
         }
 
@@ -155,15 +154,18 @@ class RegisterScreen extends Component {
 
 
         const { navigation } = this.props
-
         // ! Enviar a la base de datos
         try {
-            const { user } = await auth.createUserWithEmailAndPassword(email, password);
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+            const body = JSON.stringify({ name: displayName, email, password, confirmPassword })
 
-            // ! ver video sobre firestore y react native
-            await createUser(user, { displayName })
+            const response = await axios.post('http://192.168.0.17:3000/register', body, config)
+            console.log(response)
 
-            // ! Reseteo del form
             this.setState({
                 displayName: '',
                 email: '',
@@ -173,11 +175,10 @@ class RegisterScreen extends Component {
                 errMensaje: ''
             });
 
-            navigation.navigate('home');
-
+            navigation.navigate('login');
             // ! Si hubo error
         } catch (error) {
-            alert('Hubo un error', error);
+            console.log('Hubo un error', error)
         }
 
     }
@@ -192,8 +193,8 @@ class RegisterScreen extends Component {
                                     {this.state.error ? <MessageError>{this.state.errMensaje}</MessageError> : null}
                                 </ErrorBox>
 
-                                <Input 
-                                    onChangeText={displayName => this.setState({ displayName })} 
+                                <Input
+                                    onChangeText={displayName => this.setState({ displayName })}
                                     value={this.state.displayName}
                                     placeholder = "Inserte su nombre"
                                     label='Nombre'
@@ -207,9 +208,9 @@ class RegisterScreen extends Component {
                                         color: 'black'
                                     }}
                                 />
-                                
-                                <Input 
-                                    onChangeText={email => this.setState({ email })} 
+
+                                <Input
+                                    onChangeText={email => this.setState({ email })}
                                     value={this.state.email}
                                     placeholder = "Inserte su email"
                                     label='Email'
@@ -224,10 +225,10 @@ class RegisterScreen extends Component {
                                     }}
                                     keyboardType='email-address'
                                 />
-                                
-                                <Input 
-                                    secureTextEntry={ true } 
-                                    onChangeText={password => this.setState({ password })} value={this.state.password}  
+
+                                <Input
+                                    secureTextEntry={ true }
+                                    onChangeText={password => this.setState({ password })} value={this.state.password}
                                     placeholder = "Inserte su contraseña"
                                     label='Contraseña'
                                     labelStyle={{
@@ -240,10 +241,10 @@ class RegisterScreen extends Component {
                                         color: 'black'
                                     }}
                                 />
-                                
-                                <Input 
-                                    secureTextEntry={ true } 
-                                    onChangeText={confirmPassword => this.setState({ confirmPassword })} type='password' 
+
+                                <Input
+                                    secureTextEntry={ true }
+                                    onChangeText={confirmPassword => this.setState({ confirmPassword })} type='password'
                                     value={this.state.confirmPassword}
                                     placeholder = "Confirme su contraseña"
                                     label='Confirme contraseña'
