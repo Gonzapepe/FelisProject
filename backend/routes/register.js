@@ -2,9 +2,17 @@ const express = require('express')
 const router = express.Router()
 const User = require('../database/user')
 const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
-const { body, check, validationResult } = require('express-validator')
+const { check, validationResult } = require('express-validator')
 require('dotenv').config()
+
+const randomTag = (tag) => {
+    const newTag = Math.floor( 0000 + Math.random() * 9999)
+    if(newTag === tag) {
+        randomTag(newTag)
+    }
+
+    return newTag
+}   
 
 router.post('/', [
     check('name', 'Nombre es requerido').not().isEmpty(),
@@ -25,14 +33,23 @@ router.post('/', [
   try {
       const existentUser = await User.findOne({ email })
     if(existentUser){
-        return res.status(400).json({ error: 'El usuario ya existe.' })
+        return res.status(400).json({ error: 'El email ya existe.' })
     }
+
+    let tag = Math.floor(10000 + Math.random() * 99999)
+    const existentTag = await User.find({ tag })
+    if(existentTag.length) {
+        tag = randomTag(tag)
+        return tag
+    }
+    console.log(tag) 
     const salt = await bcrypt.genSalt(10)
     const hashedPassword = await bcrypt.hash(password, salt)
     const user = new User({
         name: name,
         email: email,
-        password: hashedPassword
+        password: hashedPassword,
+        tag: tag
     })
 
     await user.save()
@@ -46,4 +63,3 @@ router.post('/', [
 })
 
 module.exports = router
-

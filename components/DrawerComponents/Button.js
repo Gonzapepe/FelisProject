@@ -6,7 +6,7 @@ import { DrawerActions } from 'react-navigation-drawer'
 const Button = ({ navigation }) => (
     <View>
         <SafeAreaView>
-            <TouchableOpacity onPress={() => { navigation.dispatch(DrawerActions.openDrawer()) }} >
+            <TouchableOpacity onPress={() => { navigation.dispatch(DrawerActions.toggleDrawer()) }} >
                 <Text> &#9776; </Text>
             </TouchableOpacity>
         </SafeAreaView>

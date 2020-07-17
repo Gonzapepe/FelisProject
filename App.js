@@ -64,8 +64,8 @@ const App = () => {
   const AppStack = createStackNavigator({
     home: {
       screen: HomeScreen,
-      navigationOptions: ({ navigation }) => ({
-        headerLeft: () =>  <Button navigation={navigation} />,
+      navigationOptions: ({navigation}) =>({
+        headerLeft: ()=><Button navigation={navigation} />,
         title: null
       })
       },
@@ -85,7 +85,6 @@ const App = () => {
     home: AppStack,
     test: TestStack,
     config: ConfigStack
-    //signOut: SignOut
   }, {
     initialRouteName: 'home',
     contentComponent: props => <DrawerContent {...props} />
@@ -110,9 +109,7 @@ const App = () => {
   )
 
   return(
-    <Provider store={store} >
         <AppContainer />
-    </Provider>
   )
 }
 

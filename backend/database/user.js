@@ -4,7 +4,8 @@ const Schema = mongoose.Schema
 const registerSchema = new Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        unique: false,
     },
     email: {
         type: String,
@@ -15,12 +16,21 @@ const registerSchema = new Schema({
         type: String,
         required: true
     },
+    tag: {
+        type: Number,
+        unique: true,
+    },
     date: {
         type: Date,
         default: Date.now()
+    },
+    contacts: [{
+        contact: {
+        type: Schema.Types.ObjectId,
+        unique: true,
     }
+    }],
 })
-
 
 module.exports = User = mongoose.model('User', registerSchema)
 
