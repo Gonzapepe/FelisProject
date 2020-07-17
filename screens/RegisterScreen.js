@@ -1,35 +1,81 @@
 import React, { Component } from 'react';
 
-import styled from 'styled-components';
-import CustomButton from '../components/CustomButton/custombutton';
 
+// ! Componentes
+import { Item, Input, Label, View } from 'native-base';
+import { Card } from 'react-native-ui-lib';
+import { Image, StyleSheet } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { LinearGradient } from "expo-linear-gradient";
+import CustomButton from '../components/CustomButton/custombutton';
+import logo from '../assets/images/whatsapp.png';
+
+// ! Styles
+import styled from 'styled-components';
+
+// ! Axios
 import axios from 'axios';
 
 
 // ! Styled Components
-const Start = styled.Text`
+const Title = styled.Text`
     font-weight: bold;
     font-size: 36px;
     color: white;
+    text-align: center;
+    margin-top:50px;
+`;
+
+const Logo = styled.View`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
 `;
 
 const ErrorBox = styled.View`
-  margin-bottom: 20px;
-  margin-top: 20px;
-  margin-bottom: 40px;
+    margin-bottom: 5px;
+    margin-top: 15px;
 `;
 
 const MessageError = styled.Text`
-  text-align: center;
-  color: red;
-  font-size: 15px;
+    text-align: center;
+    color: red;
+    font-size: 15px;
 `;
 
+const styles = StyleSheet.create({
+    stretch: {
+      width: 100,
+      height: 100,
+      resizeMode: 'stretch',
+    },
+
+    password: {
+        marginTop: 20,
+        marginBottom: 20
+    },
+
+    label: {
+        color: 'black',
+        fontSize: 17
+    },
+
+    input: {
+        fontSize: 15,
+        marginTop: 5,
+    },
+
+    bodyMessages: {
+        flex: 2,
+        backgroundColor: 'blue'
+    },
+});
 
 const ButtonContainer = styled.View`
   margin-top: 20px;
-  width: 60%;
+  width: 100%;
   flex-direction: row;
   justify-content: center;
 `;
@@ -49,15 +95,9 @@ const SecondText = styled.Text`
   font-weight: bold;
 `;
 
-const Card = styled.View`
+const Contenedor = styled.View`
   width: 100% ;
   height: 100%;
-  margin: 0;
-  display: flex;
-  margin-top: 12%;
-  align-items: center;
-  flex-direction: column;
-
 `;
 
 class RegisterScreen extends Component {
@@ -183,26 +223,66 @@ class RegisterScreen extends Component {
 
     render(){
         return (
-            <LinearGradient colors={['#1D2671', '#C33764']}>
-                <Card>
-                        <Start>Bienvenido</Start>
+            <>
+                <LinearGradient colors={['#1D2671', '#C33764']}>
+                    <Contenedor>
+                        <KeyboardAwareScrollView >
+                            <Title>
+                                Bienvenido
+                            </Title>
+                            
+                            <Logo>
+                                <Image style={styles.stretch} source={logo} />
+                            </Logo>
 
-                                <ErrorBox>
-                                    {this.state.error ? <MessageError>{this.state.errMensaje}</MessageError> : null}
-                                </ErrorBox>
+                                <Card paddingT-5 paddingB-20 paddingL-10 paddingR-10>
+                                
 
-                              
+                                        <ErrorBox>
+                                            {this.state.error ? <MessageError>{this.state.errMensaje}</MessageError> : null}
+                                        </ErrorBox>
 
-                        <ButtonContainer>
-                            <CustomButton width='250px' title='Registrarse' onPress={  this.handleSubmit } />
-                        </ButtonContainer>
+                                            <Item stackedLabel>
+                                                <Label style={styles.label}>Email</Label>
+                                        
+                                                    <Input 
+                                                        placeholder="Ingrese un correo" 
+                                                        style={styles.input}
+                                                        onChangeText={this.handleEmail}
+                                                        value={this.state.email}    
+                                                    />
+                                            </Item>
 
-                        <LoginTextContainer>
-                            <LoginText> ¿Ya tenés cuenta? </LoginText>
-                            <SecondText onPress={() => this.props.navigation.navigate('login')} >Inicia sesión</SecondText>
-                        </LoginTextContainer>
-                </Card>
-            </LinearGradient>
+                                            <Item stackedLabel last style={styles.password}>
+                                                <Label style={styles.label}>Password</Label>
+                                                    <Input 
+                                                        secureTextEntry={true} 
+                                                        placeholder="Ingrese una contraseña"
+                                                        style={styles.input}
+                                                        onChangeText={this.handlePassword}
+                                                        value={this.state.password}    
+                                                    />
+                                            </Item>
+
+
+
+                                        <ButtonContainer>
+                                            <CustomButton width='250px' title='Registrarse' onPress={  this.handleSubmit } />
+                                        </ButtonContainer>
+
+                                </Card>
+                            
+
+                                
+                                <LoginTextContainer>
+                                    <LoginText> ¿Ya tenés cuenta? </LoginText>
+                                    <SecondText onPress={() => this.props.navigation.navigate('login')} >Iniciar sesión</SecondText>
+                                </LoginTextContainer>
+
+                        </KeyboardAwareScrollView>
+                    </Contenedor>
+                </LinearGradient>
+            </>
         )}
 }
 

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 
 // ! Componentes
-import { Container, Header, Content, Form, Item, Input, Label } from 'native-base';
-import {Card} from 'react-native-ui-lib';
-import { View, Animated, Image, StyleSheet} from 'react-native';
+import { Item, Input, Label } from 'native-base';
+import { Card } from 'react-native-ui-lib';
+import { Animated, Image, StyleSheet} from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import LoadingScreen from './LoadingScreen';
 import CustomButton from '../components/CustomButton/custombutton';
 import { LinearGradient } from "expo-linear-gradient";
@@ -23,7 +24,7 @@ const Title = styled.Text`
     font-size: 36px;
     color: white;
     text-align: center;
-    margin-top:70px;
+    margin-top:50px;
 `;
 
 const Logo = styled.View`
@@ -260,52 +261,54 @@ export default class LoginScreen extends Component {
                         })
                     }}>
 
-                    <Title>
-                        Bienvenido
-                    </Title>
-                    <Logo>
-                        <Image style={styles.stretch} source={logo} />
-                    </Logo>
+                        <Contenedor>
+                            <KeyboardAwareScrollView>
 
-                    <Contenedor>
-
-                        <Card paddingT-5 paddingB-20 paddingL-10 paddingR-10>
-
-                            <ErrorBox>
-                                {this.state.errorValidation ? <MessageError>{this.state.errorMessage}</MessageError> : null}
-                            </ErrorBox>
+                                <Title>
+                                    Bienvenido
+                                </Title>
+                                <Logo>
+                                    <Image style={styles.stretch} source={logo} />
+                                </Logo>
 
 
+                                <Card paddingT-5 paddingB-20 paddingL-10 paddingR-10>
 
-                            <Item stackedLabel>
-                                <Label style={styles.label}>Email</Label>
-                                <Input 
-                                    placeholder="Ingrese un correo" 
-                                    style={styles.input}
-                                    onChangeText={this.handleEmail}
-                                    value={this.state.email}    
-                                />
-                            </Item>
+                                    <ErrorBox>
+                                        {this.state.errorValidation ? <MessageError>{this.state.errorMessage}</MessageError> : null}
+                                    </ErrorBox>
 
-                            <Item stackedLabel last style={styles.password}>
-                                <Label style={styles.label}>Password</Label>
-                                <Input 
-                                    secureTextEntry={true} 
-                                    placeholder="Ingrese una contraseña"
-                                    style={styles.input}
-                                    onChangeText={this.handlePassword}
-                                    value={this.state.password}    
-                                />
-                            </Item>
 
-                            <ButtonContainer>
-                                <CustomButton title='Iniciar sesión' onPress={ this.handleSubmit } />
-                                <CustomButton title='Registrarse' onPress={() => navigation.navigate('register')} />
-                            </ButtonContainer>
-                        
-                        </Card>
+                                        <Item stackedLabel>
+                                            <Label style={styles.label}>Email</Label>
+                                            <Input 
+                                                placeholder="Ingrese un correo" 
+                                                style={styles.input}
+                                                onChangeText={this.handleEmail}
+                                                value={this.state.email}    
+                                            />
+                                        </Item>
 
-                    </Contenedor>
+                                        <Item stackedLabel last style={styles.password}>
+                                            <Label style={styles.label}>Password</Label>
+                                            <Input 
+                                                secureTextEntry={true} 
+                                                placeholder="Ingrese una contraseña"
+                                                style={styles.input}
+                                                onChangeText={this.handlePassword}
+                                                value={this.state.password}    
+                                            />
+                                        </Item>
+                                    
+                                        <ButtonContainer>
+                                            <CustomButton title='Iniciar sesión' onPress={ this.handleSubmit } />
+                                            <CustomButton title='Registrarse' onPress={() => navigation.navigate('register')} />
+                                        </ButtonContainer>
+                                
+                                </Card>
+
+                            </KeyboardAwareScrollView>
+                        </Contenedor>
                     </Animated.View>
                 </LinearGradient>
                 </>
