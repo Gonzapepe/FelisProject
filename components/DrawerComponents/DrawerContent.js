@@ -1,6 +1,6 @@
 import React from 'react'
-import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, FlatList } from 'react-native'
-import { Avatar } from 'react-native-elements'
+/*import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, FlatList } from 'react-native'
+import { Avatar } from 'react-native-elements' */
 import { Content, Container, Header, Left, Body, List, ListItem, Icon } from 'native-base'
 import styled from 'styled-components'
 import { YellowBox } from 'react-native'
@@ -62,7 +62,7 @@ render(){
 
 return (
     <Container>
-
+        {/*
         <Header style={styles.header} >
             <View style={styles.avatarStyle}>
             <Avatar
@@ -105,10 +105,13 @@ return (
                 <TouchableOpacity onPress={ () => logout()}><Text> Cerrar sesión </Text></TouchableOpacity>
             </ListItem>
         </Content>
+        */}
     </Container>
 )
 }
 }
+
+/*
 const styles = StyleSheet.create({
     header: {
         backgroundColor: '#3a455c',
@@ -136,5 +139,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
     }
 })
+*/
 
 export default DrawerContent

@@ -4,8 +4,6 @@ import styled from 'styled-components';
 import CustomButton from '../components/CustomButton/custombutton';
 
 import { LinearGradient } from "expo-linear-gradient";
-
-import { Input } from 'react-native-elements';
 import axios from 'axios';
 
 
@@ -76,6 +74,7 @@ class RegisterScreen extends Component {
             error: false,
             errMensaje: ''
         }
+        
     }
 
 
@@ -151,9 +150,7 @@ class RegisterScreen extends Component {
 
             return;
         }
-
-
-        const { navigation } = this.props
+        
         // ! Enviar a la base de datos
         try {
             const config = {
@@ -161,10 +158,11 @@ class RegisterScreen extends Component {
                     'Content-Type': 'application/json'
                 }
             }
-            const body = JSON.stringify({ name: displayName, email, password, confirmPassword })
 
-            const response = await axios.post('http://192.168.0.17:3000/register', body, config)
-            console.log(response)
+            const body = JSON.stringify({name: displayName, email, password, confirmPassword});
+
+            const res = await axios.post('http://192.168.100.14:3000/register', body, config);
+            console.log(res);
 
             this.setState({
                 displayName: '',
@@ -175,10 +173,10 @@ class RegisterScreen extends Component {
                 errMensaje: ''
             });
 
-            navigation.navigate('login');
+            this.props.navigation.navigate('login');
             // ! Si hubo error
-        } catch (error) {
-            console.log('Hubo un error', error)
+        } catch (err) {
+            console.log('Hubo un error', err);
         }
 
     }
@@ -193,71 +191,7 @@ class RegisterScreen extends Component {
                                     {this.state.error ? <MessageError>{this.state.errMensaje}</MessageError> : null}
                                 </ErrorBox>
 
-                                <Input
-                                    onChangeText={displayName => this.setState({ displayName })}
-                                    value={this.state.displayName}
-                                    placeholder = "Inserte su nombre"
-                                    label='Nombre'
-                                    labelStyle={{
-                                        color: 'white'
-                                    }}
-                                    inputContainerStyle={{
-                                        borderBottomColor: 'black',
-                                    }}
-                                    inputStyle={{
-                                        color: 'black'
-                                    }}
-                                />
-
-                                <Input
-                                    onChangeText={email => this.setState({ email })}
-                                    value={this.state.email}
-                                    placeholder = "Inserte su email"
-                                    label='Email'
-                                    labelStyle={{
-                                        color: 'white'
-                                    }}
-                                    inputContainerStyle={{
-                                        borderBottomColor: 'black'
-                                    }}
-                                    inputStyle={{
-                                        color: 'black'
-                                    }}
-                                    keyboardType='email-address'
-                                />
-
-                                <Input
-                                    secureTextEntry={ true }
-                                    onChangeText={password => this.setState({ password })} value={this.state.password}
-                                    placeholder = "Inserte su contraseña"
-                                    label='Contraseña'
-                                    labelStyle={{
-                                        color: 'white'
-                                    }}
-                                    inputContainerStyle={{
-                                        borderBottomColor: 'black'
-                                    }}
-                                    inputStyle={{
-                                        color: 'black'
-                                    }}
-                                />
-
-                                <Input
-                                    secureTextEntry={ true }
-                                    onChangeText={confirmPassword => this.setState({ confirmPassword })} type='password'
-                                    value={this.state.confirmPassword}
-                                    placeholder = "Confirme su contraseña"
-                                    label='Confirme contraseña'
-                                    labelStyle={{
-                                        color: 'white'
-                                    }}
-                                    inputContainerStyle={{
-                                        borderBottomColor: 'black'
-                                    }}
-                                    inputStyle={{
-                                        color: 'black'
-                                    }}
-                                />
+                              
 
                         <ButtonContainer>
                             <CustomButton width='250px' title='Registrarse' onPress={  this.handleSubmit } />

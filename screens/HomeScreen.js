@@ -44,7 +44,7 @@ class HomeScreen extends React.Component {
 
         }
 
-        await axios.get('http://192.168.0.17/home', config)
+        await axios.get('http://192.168.100.14/home', config)
     }
 
 

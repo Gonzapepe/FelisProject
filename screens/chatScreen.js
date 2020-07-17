@@ -24,7 +24,7 @@ class ChatScreen extends React.Component {
 
     componentDidMount() {
         //Cambiar la ip para el uso propio local
-        this.socket = io(`http://192.168.0.17:3000`)
+        this.socket = io(`http://192.168.100.14:3000`)
         this.socket.on('messagesChat', message => {
             this.setState({ sentMessages: [...this.state.sentMessages, message] })
         })
