@@ -1,27 +1,16 @@
 import React, { Component } from 'react'
-import { View, Text ,Button} from 'react-native'
-import styled from 'styled-components'
-import axios from 'axios'
 
 
-const Body = styled.View`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    width: 100%;
-    height: 100%;
-`
+// ! Components
+import { Container, Drawer, Text, List, ListItem, Switch, Card, Content, Header, Left, Body, Right, Button, Icon } from 'native-base';
 
-const BodyText = styled.Text`
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
-`
+// ! Styles
+import styled from 'styled-components';
+// ! Axios
+import axios from 'axios';
 
 
-
-class HomeScreen extends React.Component {
+class HomeScreen extends Component {
     constructor(props) {
         super(props)
 
@@ -47,17 +36,71 @@ class HomeScreen extends React.Component {
         await axios.get('http://192.168.100.14/home', config)
     }
 
+    openDrawer(){
+        this._drawer._root.open();
+    }
 
-    render() {
+    closeDrawer(){
+        this._drawer._root.close();
+    }
 
+    renderHeader(){
+        return(
+            <>
+                <Header>
+                    <Left>
+                        <Button transparent onPress={() => this.openDrawer()}>
+                            <Icon name="menu"/>
+                        </Button>
+                    </Left>
+                </Header>
+            </>
+        )
+    }
 
+    render(){
         return (
-            <Body>
-                <Button onPress={ () => this.props.navigation.navigate('chat') } title='Chat' ></Button>
-            </Body>
+            <>
+            <Drawer
+                ref={(ref) => {this._drawer = ref}}
+                content={ <Text>Hola mundo</Text> }
+                onClose={() => this.closeDrawer()}
+            >
+            {this.renderHeader()}
+
+            <Container>
+                <Content>
+                    <List>
+                        <ListItem>
+                            <Left>
+                                <Icon name="plane" />
+                            </Left>
+                            <Body>
+                                <Text>Menu De Prueba</Text>
+                            </Body>
+                            <Right>
+                                <Switch value={false} />
+                            </Right>
+                        </ListItem>
+                        <ListItem>
+                            <Left>
+                                <Icon name="wifi" />
+                            </Left>
+                            <Body>
+                                <Text>Wifi</Text>
+                            </Body>
+                            <Right>
+                                <Switch value={false} />
+                            </Right>
+                        </ListItem>
+                    </List>
+                </Content>
+            </Container>
+            </Drawer>
+            </>
         )
     }
 }
 
 
-export default HomeScreen
+export default HomeScreen;

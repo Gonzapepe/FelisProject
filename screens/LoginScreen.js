@@ -67,14 +67,17 @@ const ButtonContainer = styled.View`
 `;
 
 const ErrorBox = styled.View`
-  margin-bottom: 5px;
-  margin-top: 15px;
+    margin-bottom: 10px;
+    margin-top: 15px;
+    background-color: red;
+    border-radius: 20px;
 `;
 
 const MessageError = styled.Text`
-  text-align: center;
-  color: red;
-  font-size: 15px;
+    text-align: center;
+    color: white;
+    font-size: 15px;
+    padding: 5px;
 `;
 
 const Contenedor = styled.View`
@@ -175,7 +178,6 @@ export default class LoginScreen extends Component {
             setTimeout(() => {
                 this.setState({
                     errorValidation: false,
-                    errorMessage: '',
                 })
             }, 3000);
 
@@ -186,13 +188,12 @@ export default class LoginScreen extends Component {
         if(!regularExp.test(email)){
             this.setState({
                 errorValidation: true,
-                errorMessage: 'Email inválido'
+                errorMessage: 'El email es inválido'
             });
 
             setTimeout(() => {
                 this.setState({
                     errorValidation: false,
-                    errorMessage: ''
                 });
             }, 3000);
 
@@ -285,6 +286,7 @@ export default class LoginScreen extends Component {
                                                 placeholder="Ingrese un correo" 
                                                 style={styles.input}
                                                 onChangeText={this.handleEmail}
+                                                autoCapitalize='none'
                                                 value={this.state.email}    
                                             />
                                         </Item>
@@ -296,6 +298,7 @@ export default class LoginScreen extends Component {
                                                 placeholder="Ingrese una contraseña"
                                                 style={styles.input}
                                                 onChangeText={this.handlePassword}
+                                                autoCapitalize='none'
                                                 value={this.state.password}    
                                             />
                                         </Item>

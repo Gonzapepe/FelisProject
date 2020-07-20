@@ -10,9 +10,9 @@ require('dotenv').config()
 router.get('/', auth, async (req, res) => {
     try {
         const data = await User.findById(req.user.id).select('-password')
-        
+        res.json({ data: data });
 
-        res.json({ data: data })
+        
     } catch (err) {
         res.status(500).json({ msg: 'Server error' })
     }

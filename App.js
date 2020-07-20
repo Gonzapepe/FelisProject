@@ -1,33 +1,31 @@
-import React from 'react'
-import { createDrawerNavigator } from 'react-navigation-drawer'
-import {  createAppContainer, createSwitchNavigator } from 'react-navigation'
-import { createStackNavigator } from 'react-navigation-stack'
-import LoginScreen from './screens/LoginScreen'
-import RegisterScreen from './screens/RegisterScreen'
-import HomeScreen from './screens/HomeScreen'
-import { Provider } from 'react-redux'
-import { store } from './redux/store'
-import Test from './components/DrawerComponents/Test'
-import Button from './components/DrawerComponents/Button'
-import DrawerContent from './components/DrawerComponents/DrawerContent'
-import chatScreen from './screens/chatScreen'
+import React from 'react';
 
-import LoadingScreen from './screens/LoadingScreen';
-import ConfigScreen from './screens/ConfigScreen'
+import { createDrawerNavigator } from 'react-navigation-drawer';
+
+import {  createAppContainer, createSwitchNavigator } from 'react-navigation';
+
+import { createStackNavigator } from 'react-navigation-stack';
+
+import LoginScreen from './screens/LoginScreen';
+
+import RegisterScreen from './screens/RegisterScreen';
+
+import HomeScreen from './screens/HomeScreen';
+
+import { Provider } from 'react-redux';
+
+import { store } from './redux/store';
+
+import chatScreen from './screens/chatScreen';
+
+import ConfigScreen from './screens/ConfigScreen';
+
+import DrawerScreen from './components/DrawerComponents/DrawerContent';
+
 
 
 const App = () => {
-
-  const LoadingStack = createStackNavigator({
-    loading: {
-      screen: LoadingScreen,
-      navigationOptions: {
-        headerShown: false
-      }
-    },
-  })
-
-
+  // ! Login / Register Screen
   const AuthStack = createStackNavigator({
     login: {
       screen: LoginScreen,
@@ -44,58 +42,40 @@ const App = () => {
 
   })
 
-  const TestStack = createStackNavigator({
-    test: {
-      screen: Test,
-      navigationOptions: ({ navigation }) => ({
-        headerLeft: () => <Button navigation={navigation} />,
-        title: null
-
-      })
-    }
-  })
-
   const ConfigStack = createStackNavigator({
     config: {
       screen: ConfigScreen,
     }
   })
 
+  // ! Menu Home Screen
   const AppStack = createStackNavigator({
     home: {
       screen: HomeScreen,
-      navigationOptions: ({ navigation }) => ({
-        headerLeft: () =>  <Button navigation={navigation} />,
-        title: null
-      })
+      navigationOptions: {
+        headerShown: false
+      }
       },
     chat:{
       screen:chatScreen,
-      navigationOptions: ({navigation}) =>({
-        headerLeft: ()=><Button navigation={navigation} />,
-        title: null
-      })
     }
 
 
   })
 
-
-  const DrawerNavigator = createDrawerNavigator({
-    home: AppStack,
-    test: TestStack,
-    config: ConfigStack
-    //signOut: SignOut
+  // ! Drawer Component
+  const DrawerNavigator =  createDrawerNavigator({
+    home: AppStack
   }, {
     initialRouteName: 'home',
-    contentComponent: props => <DrawerContent {...props} />
+    contentComponent: props => <DrawerScreen {...props}/>
   })
 
+  // ! Todas las rutas en el componente principal
   const AppContainer = createAppContainer(
     createSwitchNavigator({
       Auth: AuthStack,
       App: AppStack,
-      Test: TestStack,
       Config: ConfigStack,
       Drawer: DrawerNavigator
     },

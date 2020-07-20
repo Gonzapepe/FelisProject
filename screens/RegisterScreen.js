@@ -35,14 +35,17 @@ const Logo = styled.View`
 `;
 
 const ErrorBox = styled.View`
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     margin-top: 15px;
+    background-color: red;
+    border-radius: 20px;
 `;
 
 const MessageError = styled.Text`
     text-align: center;
-    color: red;
+    color: white;
     font-size: 15px;
+    padding: 5px;
 `;
 
 const styles = StyleSheet.create({
@@ -52,24 +55,16 @@ const styles = StyleSheet.create({
       resizeMode: 'stretch',
     },
 
-    password: {
-        marginTop: 20,
-        marginBottom: 20
-    },
-
     label: {
         color: 'black',
-        fontSize: 17
+        fontSize: 17,
+        marginTop: 5,
+
     },
 
     input: {
         fontSize: 15,
-        marginTop: 5,
-    },
-
-    bodyMessages: {
-        flex: 2,
-        backgroundColor: 'blue'
+        marginTop: 0,
     },
 });
 
@@ -85,7 +80,8 @@ const LoginText = styled.Text`
 `;
 
 const LoginTextContainer = styled.View`
-    margin-top: 45px;
+    margin-top: 25px;
+    margin-bottom: 30px;
     display: flex;
     flex-direction: row;
 `;
@@ -112,7 +108,8 @@ class RegisterScreen extends Component {
             password: '',
             confirmPassword: '',
             error: false,
-            errMensaje: ''
+            errorValidation: false,
+            errorMessage: '',
         }
         
     }
@@ -123,20 +120,19 @@ class RegisterScreen extends Component {
     handleSubmit = async event => {
         event.preventDefault()
 
-        const { email, displayName, password, confirmPassword } = this.state
+        const { email, displayName, password, confirmPassword } = this.state;
         const regularExp = new RegExp("@");
 
         // ! Validación
         if(email.trim() === '' || password.trim() === '' || displayName.trim() === '' || confirmPassword.trim() === '') {
             this.setState({
-                error: true,
-                errMensaje: 'Rellene los campos correctamente'
+                errorValidation: true,
+                errorMessage: 'Rellene los campos correctamente',
             });
 
             setTimeout(() => {
                 this.setState({
-                    error: true,
-                    errMensaje: ''
+                    errorValidation: false,
                 });
             }, 3000);
 
@@ -145,14 +141,13 @@ class RegisterScreen extends Component {
 
         if(password.trim().length < 6) {
             this.setState({
-                error: true,
+                errorValidation: true,
                 errMensaje: 'La contraseña debe tener al menos 6 dígitos'
             });
 
             setTimeout(() => {
                 this.setState({
-                    error: true,
-                    errMensaje: ''
+                    errorValidation: true,
                 });
             }, 3000);
 
@@ -161,14 +156,13 @@ class RegisterScreen extends Component {
 
         if(password !== confirmPassword) {
               this.setState({
-                error: true,
+                errorValidation: true,
                 errMensaje: 'Las contraseñas deben ser iguales'
             });
 
             setTimeout(() => {
                 this.setState({
-                    error: true,
-                    errMensaje: ''
+                    errorValidation: true,
                 });
             }, 3000);
 
@@ -177,14 +171,13 @@ class RegisterScreen extends Component {
 
         if(!regularExp.test(email)){
             this.setState({
-                error: true,
-                errMensaje: 'Email inválido'
+                errorValidation: true,
+                errMensaje: 'El email es inválido'
             });
 
             setTimeout(() => {
                 this.setState({
                     error: false,
-                    errMensaje: ''
                 });
             }, 3000);
 
@@ -239,45 +232,68 @@ class RegisterScreen extends Component {
                                 
 
                                         <ErrorBox>
-                                            {this.state.error ? <MessageError>{this.state.errMensaje}</MessageError> : null}
+                                            {this.state.errorValidation ? <MessageError>{this.state.errorMessage}</MessageError> : null}
                                         </ErrorBox>
 
                                             <Item stackedLabel>
-                                                <Label style={styles.label}>Email</Label>
+                                                <Label style={styles.label}>Nombre</Label>
                                         
                                                     <Input 
-                                                        placeholder="Ingrese un correo" 
+                                                        onChangeText={displayName => this.setState({ displayName })}
+                                                        value={this.state.displayName}
                                                         style={styles.input}
-                                                        onChangeText={this.handleEmail}
-                                                        value={this.state.email}    
+                                                        autoCapitalize='none'
+                                                        placeholder = "Ingrese su nombre"
                                                     />
                                             </Item>
 
-                                            <Item stackedLabel last style={styles.password}>
-                                                <Label style={styles.label}>Password</Label>
+                                            <Item stackedLabel last style={styles.label}>
+                                                <Label style={styles.label}>Email</Label>
                                                     <Input 
-                                                        secureTextEntry={true} 
-                                                        placeholder="Ingrese una contraseña"
+                                                        onChangeText={email => this.setState({ email })}
+                                                        value={this.state.email}
                                                         style={styles.input}
-                                                        onChangeText={this.handlePassword}
-                                                        value={this.state.password}    
+                                                        autoCapitalize='none'
+                                                        placeholder = "Ingrese su email"
                                                     />
                                             </Item>
+                                            
+                                            <Item stackedLabel>
+                                                <Label style={styles.label}>Contraseña</Label>
+                                                    <Input
+                                                        secureTextEntry={ true }
+                                                        onChangeText={password => this.setState({ password })} 
+                                                        value={this.state.password}
+                                                        style={styles.input}
+                                                        autoCapitalize='none'
+                                                        placeholder = "Ingrese su contraseña"
+                                                    />
+                                            </Item >
 
+                                            <Item stackedLabel>
+                                                <Label style={styles.label}>Confirme su contraseña</Label>
 
+                                                    <Input
+                                                        secureTextEntry={ true }
+                                                        onChangeText={confirmPassword => this.setState({ confirmPassword })}
+                                                        style={styles.input}
+                                                        autoCapitalize='none'
+                                                        placeholder = "Ingrese su contraseña"
+                                                    />
+                                            </Item>
 
                                         <ButtonContainer>
                                             <CustomButton width='250px' title='Registrarse' onPress={  this.handleSubmit } />
                                         </ButtonContainer>
 
-                                </Card>
-                            
+                                                      
+                             
 
-                                
+                                </Card>        
                                 <LoginTextContainer>
-                                    <LoginText> ¿Ya tenés cuenta? </LoginText>
-                                    <SecondText onPress={() => this.props.navigation.navigate('login')} >Iniciar sesión</SecondText>
-                                </LoginTextContainer>
+                                            <LoginText> ¿Ya tenés cuenta? </LoginText>
+                                            <SecondText onPress={() => this.props.navigation.navigate('login')} >Inicia sesión</SecondText>
+                                </LoginTextContainer>                  
 
                         </KeyboardAwareScrollView>
                     </Contenedor>
