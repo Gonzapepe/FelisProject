@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 
 // ! Componentes
 import { Item, Input, Label } from 'native-base';
-import { Card } from 'react-native-ui-lib';
 import { Animated, Image, StyleSheet} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import LoadingScreen from './LoadingScreen';
 import CustomButton from '../components/CustomButton/custombutton';
 import { LinearGradient } from "expo-linear-gradient";
 import * as Font from 'expo-font';
+import { Card } from 'react-native-paper';
 
 
 
@@ -55,6 +55,13 @@ const styles = StyleSheet.create({
     input: {
         fontSize: 15,
         marginTop: 5,
+    },
+
+    card: {
+        paddingTop: 5,
+        paddingBottom: 20,
+        paddingLeft: 10,
+        paddingRight: 10
     }
 });
   
@@ -273,7 +280,7 @@ export default class LoginScreen extends Component {
                                 </Logo>
 
 
-                                <Card paddingT-5 paddingB-20 paddingL-10 paddingR-10>
+                                <Card  style={styles.card}>
 
                                     <ErrorBox>
                                         {this.state.errorValidation ? <MessageError>{this.state.errorMessage}</MessageError> : null}

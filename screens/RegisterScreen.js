@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 
 // ! Componentes
 import { Item, Input, Label, View } from 'native-base';
-import { Card } from 'react-native-ui-lib';
+import { Card } from 'react-native-paper';
 import { Image, StyleSheet } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { LinearGradient } from "expo-linear-gradient";
@@ -66,6 +66,13 @@ const styles = StyleSheet.create({
         fontSize: 15,
         marginTop: 0,
     },
+
+    card: {
+        paddingTop: 5,
+        paddingBottom: 20,
+        paddingLeft: 10,
+        paddingRight: 10
+    }
 });
 
 const ButtonContainer = styled.View`
@@ -228,7 +235,7 @@ class RegisterScreen extends Component {
                                 <Image style={styles.stretch} source={logo} />
                             </Logo>
 
-                                <Card paddingT-5 paddingB-20 paddingL-10 paddingR-10>
+                                <Card style={styles.card}>
                                 
 
                                         <ErrorBox>

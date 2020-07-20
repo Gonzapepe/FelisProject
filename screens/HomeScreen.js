@@ -2,13 +2,23 @@ import React, { Component } from 'react'
 
 
 // ! Components
+import {StyleSheet} from 'react-native';
 import { Container, Drawer, Text, List, ListItem, Switch, Card, Content, Header, Left, Body, Right, Button, Icon } from 'native-base';
+import DrawerScreen from '../components/DrawerComponents/DrawerContent';
 
 // ! Styles
 import styled from 'styled-components';
 // ! Axios
 import axios from 'axios';
 
+const styles = StyleSheet.create({
+    button: {
+        width: 100,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
+})
 
 class HomeScreen extends Component {
     constructor(props) {
@@ -47,12 +57,10 @@ class HomeScreen extends Component {
     renderHeader(){
         return(
             <>
-                <Header>
-                    <Left>
-                        <Button transparent onPress={() => this.openDrawer()}>
-                            <Icon name="menu"/>
+                <Header style={{ width: 100 }}>
+                        <Button  transparent style={styles.button} onPress={() => this.openDrawer()}>
+                            <Icon name="menu" />
                         </Button>
-                    </Left>
                 </Header>
             </>
         )
@@ -63,7 +71,7 @@ class HomeScreen extends Component {
             <>
             <Drawer
                 ref={(ref) => {this._drawer = ref}}
-                content={ <Text>Hola mundo</Text> }
+                content={ <DrawerScreen/> }
                 onClose={() => this.closeDrawer()}
             >
             {this.renderHeader()}
