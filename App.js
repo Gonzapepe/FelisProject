@@ -45,7 +45,11 @@ const App = () => {
   const ConfigStack = createStackNavigator({
     config: {
       screen: ConfigScreen,
-    }
+      navigationOptions: {
+        headerShown: false
+      }
+    },
+    
   })
 
   // ! Menu Home Screen
@@ -65,7 +69,9 @@ const App = () => {
 
   // ! Drawer Component
   const DrawerNavigator =  createDrawerNavigator({
-    home: AppStack
+    home: AppStack,
+    config: ConfigStack,
+    auth: AuthStack,
   }, {
     initialRouteName: 'home',
     contentComponent: props => <DrawerScreen {...props}/>
@@ -76,7 +82,6 @@ const App = () => {
     createSwitchNavigator({
       Auth: AuthStack,
       App: AppStack,
-      Config: ConfigStack,
       Drawer: DrawerNavigator
     },
     {
