@@ -10,6 +10,7 @@ import DrawerScreen from '../components/DrawerComponents/DrawerContent';
 import styled from 'styled-components';
 // ! Axios
 import axios from 'axios';
+import { View } from 'react-native-ui-lib';
 
 const styles = StyleSheet.create({
     button: {
@@ -76,34 +77,9 @@ class HomeScreen extends Component {
             >
             {this.renderHeader()}
 
-            <Container>
-                <Content>
-                    <List>
-                        <ListItem>
-                            <Left>
-                                <Icon name="plane" />
-                            </Left>
-                            <Body>
-                                <Text>Menu De Prueba</Text>
-                            </Body>
-                            <Right>
-                                <Switch value={false} />
-                            </Right>
-                        </ListItem>
-                        <ListItem>
-                            <Left>
-                                <Icon name="wifi" />
-                            </Left>
-                            <Body>
-                                <Text>Wifi</Text>
-                            </Body>
-                            <Right>
-                                <Switch value={false} />
-                            </Right>
-                        </ListItem>
-                    </List>
-                </Content>
-            </Container>
+                <View style={{backgroundColor: '#355C7D', height: '100%'}}>
+
+                </View>
             </Drawer>
             </>
         )
