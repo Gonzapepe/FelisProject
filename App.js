@@ -62,6 +62,9 @@ const App = () => {
       },
     chat:{
       screen:chatScreen,
+      navigationOptions: {
+        headerShown: false
+      }
     }
 
 

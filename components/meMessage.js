@@ -13,7 +13,7 @@ export default class MeMessages extends React.Component{
     render(){
         return(
             <View style={styles.Container}>
-                <Text >{this.props.text}</Text>
+                <Text style={styles.mensaje}>{this.props.text}</Text>
             </View>
 
         )
@@ -27,7 +27,14 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         flexDirection: "row",
         overflow: 'hidden',
-        marginLeft: '30%'
+        marginLeft: '30%',
+    },
 
+    mensaje: {
+        color: 'white',
+        margin: 10,
+        backgroundColor: '#C06C84',
+        borderRadius: 10,
+        padding: 10
     }
 })

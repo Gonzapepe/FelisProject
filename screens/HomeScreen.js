@@ -5,6 +5,7 @@ import React, { Component } from 'react'
 import {StyleSheet} from 'react-native';
 import { Container, Drawer, Text, List, ListItem, Switch, Card, Content, Header, Left, Body, Right, Button, Icon } from 'native-base';
 import DrawerScreen from '../components/DrawerComponents/DrawerContent';
+import { withNavigation } from 'react-navigation';
 
 // ! Styles
 import styled from 'styled-components';
@@ -78,8 +79,12 @@ class HomeScreen extends Component {
             {this.renderHeader()}
 
                 <View style={{backgroundColor: '#355C7D', height: '100%'}}>
-
+                    <Button style={{color: 'black', flex: 1}} onPress={() => {this.props.navigation.navigate('chat')}}>
+                        <Text>Chat</Text>
+                    </Button>
                 </View>
+
+       
             </Drawer>
             </>
         )
@@ -87,4 +92,4 @@ class HomeScreen extends Component {
 }
 
 
-export default HomeScreen;
+export default withNavigation(HomeScreen);
