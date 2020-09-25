@@ -24,11 +24,9 @@ const registerSchema = new Schema({
         type: Date,
         default: Date.now()
     },
-    contacts: [{
-        contact: {
+    contacts: [{  
         type: Schema.Types.ObjectId,
         unique: true,
-    }
     }],
 })
 

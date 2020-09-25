@@ -1,15 +1,11 @@
 import React, { Component } from 'react'
 import { View, Text, TextInput, StyleSheet, KeyboardAvoidingView, TouchableOpacity, Dimensions } from 'react-native'
-import styled from 'styled-components'
 
-import io from 'socket.io-client'
 import MeMessage from './../components/meMessage'
 
-const windowWidth = Dimensions.get('window').width
 
 
 class ChatScreen extends React.Component {
-
 
 
     constructor() {
@@ -22,23 +18,34 @@ class ChatScreen extends React.Component {
         }
     }
 
+    randomNumber() {
+        return Math.floor( 100000 + Math.random() * 999999)
+    }
+
     componentDidMount() {
         //Cambiar la ip para el uso propio local
-        this.socket = io(`http://192.168.0.17:3000`)
+        this.socket = this.props.navigation.state.params.socket
         this.socket.on('messagesChat', message => {
             this.setState({ sentMessages: [...this.state.sentMessages, message] })
+
+            console.log('desde adentro de componentDidMount', this.socket.id)
         })
+
+         this.setState({ fromId:  this.props.navigation.state.params.mongoID })
+         console.log('FROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOM ID', this.state.fromId)
     }
 
 
     HandlePress = () => {
-        this.socket.emit('messagesChat', this.state.message)
+        const { message } = this.state
+        this.socket.emit('messagesChat', message)
         this.setState({ message: '' })
+
     }
 
     render() {
 
-        const chatMessages = this.state.sentMessages.map(chatMessage => <MeMessage key={chatMessage} text={chatMessage} />)
+        const chatMessages = this.state.sentMessages.map(message => <MeMessage key={message} text={message} />)
 
         return (
             <View style={{ flex: 1 }}>
@@ -57,7 +64,7 @@ class ChatScreen extends React.Component {
                         multiline={true}
                     />
 
-                    <TouchableOpacity onPress={this.HandlePress} style={styles.bottonSend}>
+                    <TouchableOpacity onPress={this.HandlePress} style={styles.buttonSend}>
                         <Text> Send </Text>
                     </TouchableOpacity>
 
@@ -90,7 +97,7 @@ const styles = StyleSheet.create({
     inputMessage: {
         flex: 0.7
     },
-    bottonSend: {
+    buttonSend: {
         flex: 0.3,
 
     }

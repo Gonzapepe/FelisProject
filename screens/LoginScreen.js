@@ -10,7 +10,6 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Input } from 'react-native-elements';
 import axios from 'axios';
 
-import io from 'socket.io-client'
 
 const Start = styled.Text`
     font-weight: bold;

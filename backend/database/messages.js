@@ -6,16 +6,20 @@ const messageSchema = new Schema({
         type: String,
         required: true
     },
+
     towardId: {
-        type: String,
-        unique: false,
+        type: Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     },
+
     fromId: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: 'User',
         required: true,
         unique:false
     },
+
     date: {
         type: Date,
         default: Date.now()

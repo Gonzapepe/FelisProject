@@ -6,14 +6,12 @@ import { View, Text, StyleSheet} from 'react-native'
 
 export default class MeMessages extends React.Component{
 
-    constructor(props){
-        super(props)
-    }
 
     render(){
+        console.log('mensajes: ', this.props.text)
         return(
             <View style={styles.Container}>
-                <Text >{this.props.text}</Text>
+                <Text>{this.props.text}</Text>
             </View>
 
         )

@@ -59,8 +59,8 @@ const Card = styled.View`
   margin-top: 12%;
   align-items: center;
   flex-direction: column;
-
 `;
+
 
 class RegisterScreen extends Component {
 
@@ -74,10 +74,10 @@ class RegisterScreen extends Component {
             password: '',
             confirmPassword: '',
             error: false,
-            errMensaje: ''
+            errMensaje: '',
+            isDisabled: false,
         }
     }
-
 
     // ! Para enviar formularios, se usa onPress, y se llama en el boton, ya que no existe el tag de <form>
 
@@ -210,7 +210,7 @@ class RegisterScreen extends Component {
                                 />
 
                                 <Input
-                                    onChangeText={email => this.setState({ email })}
+                                    onChangeText={email => this.handleChangeText(email)}
                                     value={this.state.email}
                                     placeholder = "Inserte su email"
                                     label='Email'

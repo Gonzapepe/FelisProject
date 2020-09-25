@@ -1,41 +1,28 @@
 const express = require('express');
 const router = express.Router()
 const auth = require('../middleware/auth')
-const User = require('../database/user')
-const { check, validationResult } = require('express-validator')
 require('dotenv').config()
 
 // Ruta Home
 // De acceso privado
 
-const escapeRegex = (text) => {
-    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-}
-
-router.get('/', auth, async (req, res) => {
-    try {
-        const data = await User.findById(req.user.id).select('-password')
+// * Controllers
+const User = require('../controllers/User')
+const user_login = User.userLogin
+const search_contact = User.searchContact
+const add_contact = User.addContact
 
 
-        res.json({ data: data })
-    } catch (err) {
-        res.status(500).json({ msg: 'Server error' })
-    }
-})
+// ! Info User Login
+// ! Info Private Access
+router.get('/', auth, (req, res) => user_login(req, res));
 
-router.get('/add', async (req, res) => {
-    try {
-        if(!req.query){
-            return res.status(400).json({ error: 'No se realizó ninguna búsqueda' })
-        }
-        const regex = new RegExp(escapeRegex(req.query.search))
+// ! Search Contacts
+router.get('/users', (req, res) => search_contact(req, res));
 
-        const user = await User.find({ "name": regex }).select('-password')
+// ! Add Contact
+// ! Info Private Access
+router.post('/contacts/:newContactId', auth, (req, res) => add_contact(req, res));
 
-        res.json(user)
-    } catch (err) {
-        res.status(500).json({ error: err })
-    }
-})
 
-module.exports = router
+module.exports = router;
