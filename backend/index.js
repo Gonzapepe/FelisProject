@@ -62,7 +62,7 @@ app.use(morgan('dev'))
 app.use('/login', login)
 app.use('/register', register)
 app.use('/home', home)
-app.use('/contact', contact)
+app.use('/', contact)
 app.use('/chat', chat);
 const puerto = 3000 || process.env.PORT
 
