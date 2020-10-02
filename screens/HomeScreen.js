@@ -1,12 +1,30 @@
-import * as React from 'react'
-import { View, Text, StyleSheet, Button } from 'react-native'
-import axios from 'axios'
+import React, { Component } from 'react'
+
+
+// ! Components
+import {StyleSheet} from 'react-native';
+import { Container, Drawer, Text, List, ListItem, Switch, Card, Content, Header, Left, Body, Right, Button, Icon } from 'native-base';
+import DrawerScreen from '../components/DrawerComponents/DrawerContent';
+import { withNavigation } from 'react-navigation';
 import io from 'socket.io-client'
+// ! Styles
+import styled from 'styled-components';
+// ! Axios
+import axios from 'axios';
+import { View } from 'react-native-ui-lib';
 
-export default class HomeScreen extends React.Component{
+const styles = StyleSheet.create({
+    button: {
+        width: 100,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
+})
 
-    constructor(){
-        super()
+class HomeScreen extends Component {
+    constructor(props) {
+        super(props)
 
         this.state = {
             name: '',
@@ -41,13 +59,49 @@ export default class HomeScreen extends React.Component{
         
             console.log('afuera del callback: ', this.state.mongoId)
         }
-    render(){
+    
+
+    
+
+    openDrawer(){
+        this._drawer._root.open();
+    }
+
+    closeDrawer(){
+        this._drawer._root.close();
+    }
+
+    renderHeader(){
         return(
-            <View style={styles.body}>
-                <Text> {this.state.name} </Text>
-                <Text> {this.state.email} </Text>
-               <Button onPress={ () => this.props.navigation.navigate('chat', { socket: this.socket, mongoID: this.state.mongoId, token: this.props.navigation.state.params.token }) } title='chat' />
-            </View>
+            <>
+                <Header style={{ width: 100 }}>
+                        <Button  transparent style={styles.button} onPress={() => this.openDrawer()}>
+                            <Icon name="menu" />
+                        </Button>
+                </Header>
+            </>
+        )
+    }
+
+    render(){
+        return (
+            <>
+            <Drawer
+                ref={(ref) => {this._drawer = ref}}
+                content={ <DrawerScreen/> }
+                onClose={() => this.closeDrawer()}
+            >
+            {this.renderHeader()}
+
+                <View style={{backgroundColor: '#355C7D', height: '100%'}}>
+                    <Button style={{color: 'black', flex: 1}} onPress={() => {this.props.navigation.navigate('chat')}}>
+                        <Text>Chat</Text>
+                    </Button>
+                </View>
+
+       
+            </Drawer>
+            </>
         )
     }
 }
@@ -60,3 +114,5 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     }
 })
+
+export default withNavigation(HomeScreen);

@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 import { View, Text, TextInput, StyleSheet, KeyboardAvoidingView, TouchableOpacity, Dimensions } from 'react-native'
 
+import { Icon } from 'native-base';
+import { Avatar } from 'react-native-paper';
+
+import io from 'socket.io-client'
 import MeMessage from './../components/meMessage'
 
 
@@ -48,13 +52,30 @@ class ChatScreen extends React.Component {
         const chatMessages = this.state.sentMessages.map(message => <MeMessage key={message} text={message} />)
 
         return (
-            <View style={{ flex: 1 }}>
-                <View style={styles.top} ><Text>Nombre de grupo/Persona</Text></View>
+            <View style={{height: '100%'}}>
+                <View style={styles.top} >
+                    <Icon 
+                                name="return-left"
+                                color
+                                style={{marginRight: 30}}
+                    />
+                    <Avatar.Image 
+                        source={{
+                            uri: 'https://api.adorable.io/avatars/50/abott@adorable.png'
+                        }}
+                        size={50}
+                        style={{marginLeft: 10,}}
+                    />
+                    <Text style={styles.nombre}>Juan Doe</Text>
+                </View>
                 <View style={styles.bodyChat} >
                     { chatMessages }
                 </View>
 
                 <KeyboardAvoidingView style={styles.bodyMessages}>
+                   
+
+                    
                     <TextInput
                         style={styles.inputMessage}
                         placeholder='Messages'
@@ -64,9 +85,13 @@ class ChatScreen extends React.Component {
                         multiline={true}
                     />
 
-                    <TouchableOpacity onPress={this.HandlePress} style={styles.buttonSend}>
-                        <Text> Send </Text>
+                    <TouchableOpacity onPress={this.HandlePress} style={styles.bottonSend}>
+                        <Icon 
+                                name="paper-plane"
+                                color
+                        />
                     </TouchableOpacity>
+                
 
                 </KeyboardAvoidingView >
 
@@ -78,27 +103,63 @@ class ChatScreen extends React.Component {
 const styles = StyleSheet.create({
     top: {
         flex: 0.5,
-        borderBottomColor: 'black',
-        borderWidth: 1,
-        borderBottomLeftRadius: 25,
-        borderBottomRightRadius: 25,
-        backgroundColor: 'blue',
-
+        borderBottomColor: 'white',
+        borderBottomWidth: 1,
+        backgroundColor: '#355C7D',
+        padding: 10,
+        flexDirection: 'row',
+        alignItems: 'center'
     },
+
+    nombre: {
+        color: 'white',
+        fontSize: 18,
+        width: '50%',
+        marginLeft: 20,
+    },
+
     bodyMessages: {
-        flex: 2,
-        backgroundColor: 'blue'
+        width: '100%',
+        flexDirection: 'row',
+        backgroundColor: '#355C7D',
+        
     },
     bodyChat: {
         flex: 5,
-        backgroundColor: 'red',
+        backgroundColor: '#355C7D',
+        borderBottomWidth: 1,
+        borderBottomColor: 'white',
+    },
 
-    },
     inputMessage: {
-        flex: 0.7
+        flexDirection: 'row',
+        width: '80%',
+        padding: 5,
+        flex: 1,
+        marginLeft: 10,
+        justifyContent: 'flex-end',
+        backgroundColor: '#FFF',
+        borderRadius: 10,
+        marginRight: 10,
+        textAlign: 'center',
+        marginTop: 10,
+        marginBottom: 20,
     },
-    buttonSend: {
-        flex: 0.3,
+
+    bottonSend: {
+        width: '20%',
+        borderRadius: 20,
+        flexDirection: 'row-reverse',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        backgroundColor: '#FFF',
+        flex: 0.2,
+        marginRight: 10,
+        marginLeft: 10,
+        marginTop: 10,
+        marginBottom: 20
+
 
     }
 

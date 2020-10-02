@@ -1,11 +1,9 @@
-import React from 'react'
-import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, FlatList } from 'react-native'
-import { Avatar } from 'react-native-elements'
-import { Content, Container, Header, Left, Body, List, ListItem, Icon } from 'native-base'
-import styled from 'styled-components'
-import { YellowBox } from 'react-native'
-import _ from 'lodash'
-import axios from 'axios'
+import React, { Component } from 'react';
+
+import { View,Text, StyleSheet } from 'react-native';
+import { Avatar, Title, Caption } from 'react-native-paper';
+import { Icon, Button } from 'native-base';
+import { withNavigation } from 'react-navigation';
 
 YellowBox.ignoreWarnings(['Setting a timer']);
 const _console = _.clone(console);
@@ -15,131 +13,123 @@ console.warn = message => {
     }
 };
 
-const TextList = styled.Text`
-    margin-left: 10px;
-`
+const styles = StyleSheet.create({
+    drawerContent: {
+        flex: 1,
+    },
 
+    userInfoSection: {
+        paddingLeft: 20,
+    },
 
-class DrawerContent extends React.Component {
+    title:{
+        fontSize: 16,
+        marginTop: 3,
+        fontWeight: 'bold',
+        justifyContent: 'center'
+    },
 
-    constructor() {
-        super()
+    caption: {
+        fontSize: 14,
+        lineHeight: 14,
+        justifyContent: 'center'
+    },
 
-        this.state = {
-            email: '',
-            name: '',
+    border: {
+        borderBottomColor: '#CCC',
+        marginTop: 20,
+        borderBottomWidth: 1
+    },
 
-        }
-    }
+    icon: {
+        marginLeft: 10,
+        marginTop: 15,
+        flexDirection: 'row',
+        alignItems: 'center',
+        color: 'black'
+    },
+})
 
-
-    // Encontrar una solucion para usar las promesas de .then()
-
-    componentDidMount() {
-
-        const config = {
-            headers: {
-                'Content-Type': 'application/json',
-                'x-auth-token': `${this.props.navigation.state.params.token}`
-            }
-        }
-        axios.get('http://192.168.0.17:3000/home', config)
-            .then(res => res.data)
-            .then(res => JSON.stringify(res.data))
-            .then(response => JSON.parse(response))
-            .then(response => this.setState({ name: response.name, email: response.email }))
-            .catch(err => console.log(err))
-        }
-
+class DrawerScreen extends Component {
+    
     render() {
-        console.log(this.props.navigation.state)
-        // const logout = async () => {
-        //     try {
 
-        //     } catch (err) {
-        //         console.log(err)
-        //     }
-        // }
 
         return (
-            // <Container>
+            <View style={{flex: 1, backgroundColor: '#FFF'}}>
+                <View style={styles.drawerContent}>
+                    <View style={styles.userInfoSection}>
+                        <View style={{flexDirection: 'row', marginTop: 15}}>
+                            
+                            <Avatar.Image 
+                                source={{
+                                    uri: 'https://api.adorable.io/avatars/50/abott@adorable.png'
+                                }}
+                                size={50}
+                                style={{
+                                    marginTop: 5
+                                }}
+                            />
 
-            //     <Header style={styles.header} >
-            //         <View style={styles.avatarStyle}>
-            //             <Avatar
-            //                 showAccessory
-            //                 onPress={() => console.log('Funciona')}
-            //                 activeOpacity={0.7}
-            //                 size='medium'
-            //                 rounded
-            //                 icon={{ name: 'user', type: 'font-awesome' }}
-
-            //             />
-            //         </View>
-            //         <View style={styles.insideHeader}>
-            //             <Text style={styles.headerText}>
-            //                 {this.state.email}
-            //             </Text>
-            //             <Text style={styles.headerText}>
-            //                 {this.state.displayName}
-            //             </Text>
-            //         </View>
-
-            //     </Header>
-
-            //     <Content>
-            //         <FlatList data={[
-            //             { title: 'Home', icon: 'home', route: 'home' }, { title: 'Test', icon: 'log-in', route: 'test' },
-            //             { title: 'Configuración', icon: 'cog', route: 'config' }
-            //         ]}
-            //             renderItem={({ item }) => (
-            //                 <ListItem noBorder style={styles.ListItem} onPress={() => this.props.navigation.navigate(item.route)} >
-            //                     <Icon name={item.icon} type='FontAwesome' style={styles.Icon} />
-            //                     <TextList>{item.title}</TextList>
-            //                 </ListItem>
-            //             )}
-            //         />
+                            <View style={{marginLeft: 15, flexDirection: 'column'}}>
+                                <Title style={styles.title}>
+                                    Juan Doe
+                                </Title>
+                                <Caption style={styles.caption}>
+                                    @email_
+                                </Caption>
 
 
-            //         <ListItem noBorder >
-            //             <Icon name='log-out' style={styles.Icon} />
-            //             <TouchableOpacity onPress={() => logout()}><Text> Cerrar sesión </Text></TouchableOpacity>
-            //         </ListItem>
-            //     </Content>
-            // </Container>
+                            </View>                        
+                        </View>
+                    </View>
 
-            <View>
-                <Text>Drawer</Text>
+                    <View style={styles.border} />
+                    
+                    <View style={styles.icon}>
+                        <Button transparent onPress={() => {
+                            this.props.navigation.navigate('home');
+                            }}
+                        >
+                            <Icon 
+                                name="chatbubbles"
+                                color
+                            />
+                            <Text style={{paddingRight: 20, fontWeight:'bold', fontSize: 16}}>Chats</Text> 
+                        </Button>
+                    </View> 
+         
+
+                    <View style={styles.icon}>
+                        <Button transparent onPress={() => {
+                            this.props.navigation.navigate('config');
+                            }}
+                        >
+                            <Icon 
+                                name="settings"
+                                color
+                            />
+                            <Text style={{paddingRight: 20, fontWeight:'bold', fontSize: 16}}>Configuración</Text> 
+                        </Button>
+                    </View>    
+
+              
+                    <View style={styles.icon}>
+                        <Button transparent onPress={() => {
+                            this.props.navigation.navigate('auth');
+                        }}>
+                            <Icon 
+                                name="log-out"
+                                color
+                            />
+                            <Text style={{paddingRight: 20, fontWeight: 'bold', fontSize: 16}}>Cerrar Sesión</Text> 
+                        </Button>
+                    </View>  
+                    
+                </View>
             </View>
         )
     }
 }
-const styles = StyleSheet.create({
-    header: {
-        backgroundColor: '#3a455c',
-        height: 58,
-        flexDirection: 'row'
-    },
-    avatarStyle: {
-        marginRight: 5
-    },
-    insideHeader: {
-        flexDirection: 'column',
-        marginRight: 40,
-        marginTop: 5
-    },
-    ListItem: {
-        justifyContent: "flex-start",
-        backgroundColor: 'transparent'
-    },
-    Icon: {
-        color: '#3a455c',
-        width: 40
-    },
-    headerText: {
-        color: 'white',
-        fontSize: 16,
-    }
-})
 
-export default DrawerContent
+export default withNavigation(DrawerScreen);

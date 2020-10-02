@@ -1,50 +1,95 @@
 import React, { Component } from 'react';
 
-
+// ! Componentes
+import { Item, Input, Label } from 'native-base';
+import { Animated, Image, StyleSheet} from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import LoadingScreen from './LoadingScreen';
-import { View, Animated } from 'react-native';
-
-import styled from 'styled-components';
 import CustomButton from '../components/CustomButton/custombutton';
 import { LinearGradient } from "expo-linear-gradient";
-import { Input } from 'react-native-elements';
+import * as Font from 'expo-font';
+import { Card } from 'react-native-paper';
+
+
+
+// ! Styles
+import styled from 'styled-components';
+import logo from '../assets/images/whatsapp.png';
+
+// ! Axios
 import axios from 'axios';
 
-
-const Start = styled.Text`
+const Title = styled.Text`
     font-weight: bold;
     font-size: 36px;
     color: white;
+    text-align: center;
+    margin-top:50px;
 `;
 
-//
+const Logo = styled.View`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+`;
+
+const styles = StyleSheet.create({
+    stretch: {
+      width: 100,
+      height: 100,
+      resizeMode: 'stretch',
+    },
+
+    password: {
+        marginTop: 20,
+        marginBottom: 20
+    },
+
+    label: {
+        color: 'black',
+        fontSize: 17
+    },
+
+    input: {
+        fontSize: 15,
+        marginTop: 5,
+    },
+
+    card: {
+        paddingTop: 5,
+        paddingBottom: 20,
+        paddingLeft: 10,
+        paddingRight: 10
+    }
+});
+  
 
 const ButtonContainer = styled.View`
-  margin-top: 20px;
-  width: 70%;
+  margin-top: 15px;
+  width: 100%;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
 `;
 
 const ErrorBox = styled.View`
-  margin-bottom: 20px;
-  margin-top: 20px;
+    margin-bottom: 10px;
+    margin-top: 15px;
+    background-color: red;
+    border-radius: 20px;
 `;
 
 const MessageError = styled.Text`
-  text-align: center;
-  color: red;
-  font-size: 15px;
+    text-align: center;
+    color: white;
+    font-size: 15px;
+    padding: 5px;
 `;
 
-const Card = styled.View`
+const Contenedor = styled.View`
   width: 100% ;
   height: 100%;
-  margin: 0;
-  display: flex;
-  margin-top: 12%;
-  align-items: center;
-  flex-direction: column;
 `;
 
 export default class LoginScreen extends Component {
@@ -68,8 +113,6 @@ export default class LoginScreen extends Component {
 
 
     componentDidMount() {
-
-
         setTimeout(() => {
             this.setState({
                 loading: false
@@ -86,6 +129,13 @@ export default class LoginScreen extends Component {
                 duration: 1000,
             })
         ]).start()
+    }
+
+    async componentWillMount(){
+        await Font.loadAsync({
+            Roboto: require("native-base/Fonts/Roboto.ttf"),
+            Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+        });
     }
 
     // ! handleChange email
@@ -135,7 +185,6 @@ export default class LoginScreen extends Component {
             setTimeout(() => {
                 this.setState({
                     errorValidation: false,
-                    errorMessage: '',
                 })
             }, 3000);
 
@@ -146,13 +195,12 @@ export default class LoginScreen extends Component {
         if(!regularExp.test(email)){
             this.setState({
                 errorValidation: true,
-                errorMessage: 'Email inválido'
+                errorMessage: 'El email es inválido'
             });
 
             setTimeout(() => {
                 this.setState({
                     errorValidation: false,
-                    errorMessage: ''
                 });
             }, 3000);
 
@@ -170,7 +218,7 @@ export default class LoginScreen extends Component {
 
             const body = JSON.stringify({ email, password });
 
-            const res = await axios.post('http://192.168.0.17:3000/login', body, config)
+            const res = await axios.post('http://192.168.100.14:3000/login', body, config)
 
             // ! Reseteo de formulario
             this.setState({
@@ -211,6 +259,7 @@ export default class LoginScreen extends Component {
 
         } else {
             return (
+                <>
                 <LinearGradient colors={['#1D2671', '#C33764']}>
                     <Animated.View style={{
                         opacity: this.state.LogoAnime,
@@ -220,56 +269,59 @@ export default class LoginScreen extends Component {
                         })
                     }}>
 
-                    <Card>
-                        <Start>Bienvenido</Start>
+                        <Contenedor>
+                            <KeyboardAwareScrollView>
 
-                            <ErrorBox>
-                                {this.state.errorValidation ? <MessageError>{this.state.errorMessage}</MessageError> : null}
-                            </ErrorBox>
-
-
-                            <Input
-                                inputContainerStyle={{
-                                    borderBottomColor: 'black'
-                                }}
-                                inputStyle={{
-                                    color: 'black'
-                                }}
-                                onChangeText={
-                                    this.handleEmail
-                                }
-                                value={this.state.email}
-                                placeholder = "Inserte su email"
-                                label='Email'
-                                labelStyle={{
-                                    color: 'white'
-                                }}
-                                keyboardType='email-address'
-                            />
-
-                            <Input
-                                inputContainerStyle={{
-                                    borderBottomColor: 'black'
-                                }}
-                                secureTextEntry={true}
-                                onChangeText={this.handlePassword}
-                                value={this.state.password}
-                                placeholder = "Inserte su contraseña"
-                                label='Contraseña'
-                                labelStyle={{
-                                    color: 'white'
-                                }}
-                            />
-
-                        <ButtonContainer>
-                            <CustomButton title='Iniciar sesión' onPress={ this.handleSubmit } />
-                            <CustomButton title='Registrarse' onPress={() => navigation.navigate('register')} />
-                        </ButtonContainer>
+                                <Title>
+                                    Bienvenido
+                                </Title>
+                                <Logo>
+                                    <Image style={styles.stretch} source={logo} />
+                                </Logo>
 
 
-                    </Card>
+                                <Card  style={styles.card}>
+
+                                    <ErrorBox>
+                                        {this.state.errorValidation ? <MessageError>{this.state.errorMessage}</MessageError> : null}
+                                    </ErrorBox>
+
+
+                                        <Item stackedLabel>
+                                            <Label style={styles.label}>Email</Label>
+                                            <Input 
+                                                placeholder="Ingrese un correo" 
+                                                style={styles.input}
+                                                onChangeText={this.handleEmail}
+                                                autoCapitalize='none'
+                                                value={this.state.email}    
+                                            />
+                                        </Item>
+
+                                        <Item stackedLabel last style={styles.password}>
+                                            <Label style={styles.label}>Password</Label>
+                                            <Input 
+                                                secureTextEntry={true} 
+                                                placeholder="Ingrese una contraseña"
+                                                style={styles.input}
+                                                onChangeText={this.handlePassword}
+                                                autoCapitalize='none'
+                                                value={this.state.password}    
+                                            />
+                                        </Item>
+                                    
+                                        <ButtonContainer>
+                                            <CustomButton title='Iniciar sesión' onPress={ this.handleSubmit } />
+                                            <CustomButton title='Registrarse' onPress={() => navigation.navigate('register')} />
+                                        </ButtonContainer>
+                                
+                                </Card>
+
+                            </KeyboardAwareScrollView>
+                        </Contenedor>
                     </Animated.View>
                 </LinearGradient>
+                </>
             );
         }
 }

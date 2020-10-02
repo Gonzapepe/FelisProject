@@ -14,8 +14,12 @@ padding: 10px;
 width: ${props =>  props.width ? props.width : '120px'};
 border-radius: 16px;
 align-items: center;
+justify-content: center;
 background-color: black;
 color: white;
+margin-top: 25px;
+margin-right: 20px;
+margin-left: 20px;
 
 ${ props => props.google && css`
   background-color: #4285F4; 
