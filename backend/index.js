@@ -59,10 +59,10 @@ db.once('open', () => {
 //middleware
 app.use(morgan('dev'))
 //rutas
-app.use('/login', login)
-app.use('/register', register)
-app.use('/home', home)
-app.use('/contact', contact)
+app.use('/login', login);
+app.use('/register', register);
+app.use('/home', home);
+app.use('/contact', contact);
 app.use('/chat', chat);
 const puerto = 3000 || process.env.PORT
 

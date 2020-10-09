@@ -26,7 +26,6 @@ const registerSchema = new Schema({
     },
     contacts: [{  
         type: Schema.Types.ObjectId,
-        unique: true,
     }],
 })
 
