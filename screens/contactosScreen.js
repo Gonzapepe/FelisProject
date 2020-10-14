@@ -1,47 +1,32 @@
 import * as React from 'react'
-import { View,Text,TouchableOpacity } from 'react-native'
-import styled from 'styled-components';
-
-const Header = styled.View`
-  flex: 1,
-  backgroundColor: 'red',
-  borderWidth: 1,
-  borderColor: 'blue',
-  borderTop: 1,
-  borderBottom: 1
-`;
-
-const ContainerContact = styled.View`
-    flex: 3,
-    backgroundColor: 'green',
-    borderWidth: 1,
-    borderColor: 'white',
-    borderTop: 1,
-    borderBottom: 1
-`;
+import { View,Text,TouchableOpacity, StyleSheet } from 'react-native'
+import { Header, Button, Left, Right, Title, Container, Icon, Body } from 'native-base'
+import { withNavigation } from 'react-navigation'
 
 
-export default class contactosScreen extends React.Component{
+const styles = StyleSheet.create({
+    header: {
+        margin: 0
+    }
+})
+
+class contactosScreen extends React.Component{
     render(){
         return(
-            <View>
+            <Container style={styles.header}>
                 <Header>
-
-                     <TouchableOpacity>
-                         <Text> Contactos </Text>
-                     </TouchableOpacity>
-
-                     <TouchableOpacity>
-                         <Text> Grupos </Text>
-                     </TouchableOpacity>
-
+                    <Left>
+                        <Button transparent onPress={() => this.props.navigation.navigate('home')}>
+                        <Icon type='FontAwesome' name='arrow-left' />
+                        </Button>
+                    </Left>
+                    <Body>
+                        <Title>Contactos</Title>
+                    </Body>
                 </Header>
-
-                <ContainerContact>
-                    <Text>Contacts</Text>
-                </ContainerContact>
-
-            </View>
+            </Container>
         )
     }
 }
+
+export default withNavigation(contactosScreen)

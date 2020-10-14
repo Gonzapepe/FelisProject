@@ -1,17 +1,9 @@
 import React, { Component } from 'react';
 
-import { View,Text, StyleSheet } from 'react-native';
+import { View,Text, StyleSheet, LogBox } from 'react-native';
 import { Avatar, Title, Caption } from 'react-native-paper';
 import { Icon, Button } from 'native-base';
 import { withNavigation } from 'react-navigation';
-
-YellowBox.ignoreWarnings(['Setting a timer']);
-const _console = _.clone(console);
-console.warn = message => {
-    if (message.indexOf('Setting a timer') <= -1) {
-        _console.warn(message);
-    }
-};
 
 const styles = StyleSheet.create({
     drawerContent: {
@@ -113,6 +105,19 @@ class DrawerScreen extends Component {
                         </Button>
                     </View>    
 
+                    <View style={styles.icon}>
+                        <Button transparent onPress={() => {
+                            this.props.navigation.navigate('contacts');
+                            }}
+                        >
+                            <Icon 
+                                type='FontAwesome'
+                                name="address-book"
+                                color
+                            />
+                            <Text style={{paddingRight: 20, fontWeight:'bold', fontSize: 16}}>Contactos</Text> 
+                        </Button>
+                    </View>    
               
                     <View style={styles.icon}>
                         <Button transparent onPress={() => {

@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native'
 import { Container, Drawer, Text, List, ListItem, Switch, Card, Content, Header, Left, Body, Right, Button, Icon } from 'native-base';
 import DrawerScreen from '../components/DrawerComponents/DrawerContent';
 import { Avatar } from 'react-native-paper';
-import { BorderRadiuses } from 'react-native-ui-lib';
+
 
 
 const styles = StyleSheet.create({

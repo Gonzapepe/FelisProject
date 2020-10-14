@@ -23,10 +23,11 @@ io.on('connection' , socket => {
         req.socket = socket
         next()
     })
-    socket.on('sendId', mongoId => {
+    socket.on('sendId', (mongoId) => {
         socket.id = mongoId
         console.log('mongo: ', mongoId)
         console.log('socket: ', socket.id)
+        io.emit('sendId', socket.id)
     })
     socket.on('messagesChat' , (message) => {
         io.emit('messagesChat' , message)
