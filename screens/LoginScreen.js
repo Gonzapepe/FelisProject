@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 // ! Componentes
 import { Item, Input, Label } from 'native-base';
-import { Animated, Image, StyleSheet} from 'react-native';
+import { Animated, Image, StyleSheet, KeyboardAvoidingView} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import LoadingScreen from './LoadingScreen';
 import CustomButton from '../components/CustomButton/custombutton';
@@ -18,6 +18,7 @@ import logo from '../assets/images/whatsapp.png';
 
 // ! Axios
 import axios from 'axios';
+import { Platform } from 'react-native';
 
 const Title = styled.Text`
     font-weight: bold;
@@ -36,6 +37,11 @@ const Logo = styled.View`
 `;
 
 const styles = StyleSheet.create({
+    keyBoardAvodingView: {
+        width: 10,
+        height: 10,
+    },  
+
     stretch: {
       width: 100,
       height: 100,
@@ -218,7 +224,7 @@ export default class LoginScreen extends Component {
 
             const body = JSON.stringify({ email, password });
 
-            const res = await axios.post('http://192.168.100.14:3000/login', body, config)
+            const res = await axios.post('http://192.168.0.17:3000/login', body, config)
 
             // ! Reseteo de formulario
             this.setState({
@@ -285,10 +291,12 @@ export default class LoginScreen extends Component {
                                     <ErrorBox>
                                         {this.state.errorValidation ? <MessageError>{this.state.errorMessage}</MessageError> : null}
                                     </ErrorBox>
-
-
+                                        
+                                        
                                         <Item stackedLabel>
+                            
                                             <Label style={styles.label}>Email</Label>
+                                            
                                             <Input 
                                                 placeholder="Ingrese un correo" 
                                                 style={styles.input}
@@ -296,8 +304,9 @@ export default class LoginScreen extends Component {
                                                 autoCapitalize='none'
                                                 value={this.state.email}    
                                             />
+                                            
                                         </Item>
-
+                                        
                                         <Item stackedLabel last style={styles.password}>
                                             <Label style={styles.label}>Password</Label>
                                             <Input 
@@ -309,11 +318,13 @@ export default class LoginScreen extends Component {
                                                 value={this.state.password}    
                                             />
                                         </Item>
+                                       
                                     
                                         <ButtonContainer>
                                             <CustomButton title='Iniciar sesión' onPress={ this.handleSubmit } />
                                             <CustomButton title='Registrarse' onPress={() => navigation.navigate('register')} />
                                         </ButtonContainer>
+                                        
                                 
                                 </Card>
 

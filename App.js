@@ -1,19 +1,6 @@
 import React from 'react'
+
 import { createDrawerNavigator } from 'react-navigation-drawer'
-import {  createAppContainer, createSwitchNavigator } from 'react-navigation'
-import { createStackNavigator } from 'react-navigation-stack'
-import LoginScreen from './screens/LoginScreen'
-import RegisterScreen from './screens/RegisterScreen'
-import HomeScreen from './screens/HomeScreen'
-import Test from './components/DrawerComponents/Test'
-import Button from './components/DrawerComponents/Button'
-import DrawerContent from './components/DrawerComponents/DrawerContent'
-import chatScreen from './screens/chatScreen'
-
-import LoadingScreen from './screens/LoadingScreen';
-import ConfigScreen from './screens/ConfigScreen'
-
-import { createDrawerNavigator } from 'react-navigation-drawer';
 
 import {  createAppContainer, createSwitchNavigator } from 'react-navigation';
 
@@ -34,6 +21,8 @@ import chatScreen from './screens/chatScreen';
 import ConfigScreen from './screens/ConfigScreen';
 
 import DrawerScreen from './components/DrawerComponents/DrawerContent';
+
+import contactosScreen from './screens/contactosScreen';
 
 
 
@@ -65,6 +54,15 @@ const App = () => {
     
   })
 
+  const ContactStack = createStackNavigator({
+    contact: {
+      screen: contactosScreen,
+      navigationOptions: {
+        headerShown: false
+      }
+    }
+  })
+
   // ! Menu Home Screen
   const AppStack = createStackNavigator({
     home: {
@@ -79,8 +77,6 @@ const App = () => {
         headerShown: false
       }
     }
-
-
   })
 
   // ! Drawer Component
@@ -88,6 +84,7 @@ const App = () => {
     home: AppStack,
     config: ConfigStack,
     auth: AuthStack,
+    contacts: ContactStack
   }, {
     initialRouteName: 'home',
     contentComponent: props => <DrawerScreen {...props}/>

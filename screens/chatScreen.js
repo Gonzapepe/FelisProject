@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, TextInput, StyleSheet, KeyboardAvoidingView, TouchableOpacity, Dimensions } from 'react-native'
 
-import { Icon } from 'native-base';
+import { Icon, Button } from 'native-base';
 import { Avatar } from 'react-native-paper';
 
 import io from 'socket.io-client'
@@ -34,9 +34,7 @@ class ChatScreen extends React.Component {
 
             console.log('desde adentro de componentDidMount', this.socket.id)
         })
-
-         this.setState({ fromId:  this.props.navigation.state.params.mongoID })
-         console.log('FROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOM ID', this.state.fromId)
+         console.log('FROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOM ID', this.props.navigation.state.params.mongoID)
     }
 
 
@@ -54,11 +52,13 @@ class ChatScreen extends React.Component {
         return (
             <View style={{height: '100%'}}>
                 <View style={styles.top} >
+                    <Button transparent onPress={ () => this.props.navigation.goBack() }>
                     <Icon 
-                                name="return-left"
-                                color
-                                style={{marginRight: 30}}
+                                type='FontAwesome'
+                                name="angle-left"
+                                style={{marginRight: 30, color: 'white', fontSize: 32}}
                     />
+                    </Button>
                     <Avatar.Image 
                         source={{
                             uri: 'https://api.adorable.io/avatars/50/abott@adorable.png'
