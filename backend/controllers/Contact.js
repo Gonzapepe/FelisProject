@@ -1,7 +1,8 @@
 const User = require('../database/user');
 
 exports.contacts = async (req,res)=>{
-    // ! Buscar el usuario a añadir
+    try {
+        // ! Buscar el usuario a añadir
     const { email } = req.body;
     const user = await User.findOne({email}, (err) => {
         if(err) {
@@ -49,47 +50,56 @@ exports.contacts = async (req,res)=>{
             return;
         }
     }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send("Hubo un error");
+    }
 }
 
 exports.delete = async (req, res) => {
-    // ! Buscar el usuario a eliminar
-    const { email } = req.body;
-    const user = await User.findOne({email}, (err) => {
-        if(err) {
-            res.status(500).send("Error");
-            return;
-        }
+    try {
+          // ! Buscar el usuario a eliminar
+            const { email } = req.body;
+            const user = await User.findOne({email}, (err) => {
+                if(err) {
+                    res.status(500).send("Error");
+                    return;
+                }
 
-    });
-    
-    if(!user) {
-        res.status(400).send("Usuario no encontrado");
-        return;
-    }
+            });
+            
+            if(!user) {
+                res.status(400).send("Usuario no encontrado");
+                return;
+            }
 
-    // ! Validar que no sea el mismo usuario
-    if(req.user.id == user._id){
-        res.status(400).send("Ingrese un usuario válido");
-    }
+            // ! Validar que no sea el mismo usuario
+            if(req.user.id == user._id){
+                res.status(400).send("Ingrese un usuario válido");
+            }
 
-    const user_searcher = await User.findById(req.user.id);
-    
-    if(user_searcher.contacts.length === 0){
-        res.status(400).send("No tienes amigos, añade uno!");
-    } else {
-       const userRemoved = user_searcher.contacts.filter(
-           (item) => {
-               return item.toString() === user._id.toString()
-           }
-       );
+            const user_searcher = await User.findById(req.user.id);
+            
+            if(user_searcher.contacts.length === 0){
+                res.status(400).send("No tienes amigos, añade uno!");
+            } else {
+            const userRemoved = user_searcher.contacts.filter(
+                (item) => {
+                    return item.toString() === user._id.toString()
+                }
+            );
 
-       await User.findByIdAndUpdate(user_searcher._id, {$pull: {contacts: userRemoved.toString()}}, (err) => {
-           if(err){
-               return res.status(500).send("No se pudo eliminar el usuario");
-           }
+            await User.findByIdAndUpdate(user_searcher._id, {$pull: {contacts: userRemoved.toString()}}, (err) => {
+                if(err){
+                    return res.status(500).send("No se pudo eliminar el usuario");
+                }
 
-           res.status(200).send("Usuario eliminado");
-       });
-       console.info(userRemoved.toString()); 
+                res.status(200).send("Usuario eliminado");
+            });
+
+            }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send("Hubo un error");
     }
 }
