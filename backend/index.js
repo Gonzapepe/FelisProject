@@ -12,6 +12,7 @@ const User = require('./database/user')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const contact = require('./routes/contact');
+const notification = require('./routes/notification');
 const chat = require('./routes/chat');
 require('dotenv').config()
 
@@ -64,7 +65,10 @@ app.use('/login', login);
 app.use('/register', register);
 app.use('/home', home);
 app.use('/contact', contact);
+app.use('/notification', notification);
 app.use('/chat', chat);
+
+
 const puerto = 3000 || process.env.PORT
 
 server.listen(puerto, () => {

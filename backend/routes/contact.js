@@ -3,7 +3,8 @@ const router = express.Router();
 const Contact = require("../controllers/Contact");
 const auth = require('../middleware/auth');
 
-router.post('/', auth, Contact.contacts);
-router.delete('/delete', auth, Contact.delete);
+// ! PENDING CONTACT
+router.put('/social/send/', auth, Contact.sendNotification);
+router.delete('/delete', auth, Contact.removePendingContacts);
 
 module.exports = router;
