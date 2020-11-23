@@ -1,53 +1,34 @@
+const { findByIdAndUpdate } = require('../database/user')
 const User = require('../database/user')
 
-const escapeRegex = (text) => {
+/*const escapeRegex = (text) => {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-}
+}*/
 
 // ! User Information
-module.exports = {
-
- searchContact: async function (req, res) {
+exports.searchContact =  async (req, res) => {
     try {
         if(!req.query){
             return res.status(400).json({ error: 'No se realizó ninguna búsqueda' })
         }
-        const regex = new RegExp(escapeRegex(req.query.search))
 
-        const user = await User.find({ "name": regex }).select('-password')
+        console.log('QUERY SEARCH', req.query.search)
+        //const regex = new RegExp(escapeRegex(req.query.search))
+
+        const user = await User.find({ "name": {$regex: req.query.search, $options: 'i' } }).select('-password')
 
         res.json(user)
+        
     } catch (err) {
-        res.status(500).json({ error: err })
+        res.status(500)
+        console.log(err)
     }
-},
+}
 
-// ! Add Contacts
- addContact: async function (req, res) {
-    try {
-        const existentUser = await User.findById(req.user.id).select('-password')
-        if(!existentUser) {
-            res.json({ error: 'Debe iniciar sesión o registrarse.' })
-        }
-        const existentContact = await User.findById(req.params.newContactId).select('-password')
-        if(!existentContact) {
-            res.json({ error: 'El usuario al que quiere añadir no existe.' })
-        }
-        const newContact = {
-            contact: req.params.id
-        }
-        existentUser.contacts.unshift(newContact)
-        await existentUser.save()
-        res.json(existentUser)
-    } catch (err) {
-        res.status(500).json({ error: err })
-    }
-},
 
 // ! Info User login
- userLogin: async function (req, res) {
+ exports.userLogin =  async (req, res) => {
     try {
-        console.log(req.socket)
         const data = await User.findById(req.user.id).select('-password')
 
         res.json({ data })
@@ -55,4 +36,26 @@ module.exports = {
         res.status(500).json({ msg: err.message });
     }
 }
+
+exports.getAllUsers = async ( req, res ) => {
+    try {
+       const AllUsersButYou = await  User.find({_id: {$ne: req.user.id}}).select('-password')
+       
+       res.json(AllUsersButYou)
+    } catch (err) {
+        res.status(500).json({ msg: err })
+        console.log('Hubo un error: ', err)
+    }
+}
+
+exports.changePhoto = async ( req, res ) => {
+    try {
+        console.log('REQ FILE: ', req.file)
+        const { file } = req
+        const updatedAvatar = await User.findByIdAndUpdate(req.user.id, { avatar: file.path }) 
+        await updatedAvatar.save()
+        res.json(updatedAvatar)
+    } catch (err) {
+        res.status(500).json({ msg: err })
+    }
 }

@@ -24,6 +24,15 @@ const registerSchema = new Schema({
         unique: true,
     },
     
+    avatar: {
+        type: String,
+        default: 'uploads\\default.jpg'
+    },
+    estado: {
+        type: String,
+        default: 'disponible',
+        required: false
+    },
     date: {
         type: Date,
         default: Date.now()

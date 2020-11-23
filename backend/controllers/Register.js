@@ -14,7 +14,7 @@ const randomTag = (tag) => {
     return newTag
 }   
 
-module.exports = register_user = async (req, res) => {
+exports.register =  async (req, res) => {
 
     const {errors, isValid} = validateInputFromRegister(req.body)
 

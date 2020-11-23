@@ -72,6 +72,9 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
         paddingLeft: 10,
         paddingRight: 10
+    },
+    keyboardScroll: {
+        marginBottom: 100
     }
 });
 
@@ -206,7 +209,7 @@ class RegisterScreen extends Component {
 
             const body = JSON.stringify({name: displayName, email, password, confirmPassword});
 
-            const res = await axios.post('http://192.168.100.14:3000/register', body, config);
+            const res = await axios.post('http://192.168.0.17:3000/register', body, config);
             console.log(res);
 
             this.setState({
@@ -231,7 +234,7 @@ class RegisterScreen extends Component {
             <>
                 <LinearGradient colors={['#1D2671', '#C33764']}>
                     <Contenedor>
-                        <KeyboardAwareScrollView >
+                        <KeyboardAwareScrollView style={ styles.keyboardScroll } >
                             <Title>
                                 Bienvenido
                             </Title>

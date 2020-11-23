@@ -1,9 +1,9 @@
-import React, { Component, useState } from 'react'
+import React, { Component } from 'react'
 
 
 // ! Components
 import {StyleSheet, View} from 'react-native';
-import { Container, Drawer, Text, List, ListItem, Switch, Card, Content, Header, Left, Body, Right, Button, Icon } from 'native-base';
+import { Container, Drawer, Text, List,  Header, Left, Body, Right, Button, Icon } from 'native-base';
 import DrawerScreen from '../components/DrawerComponents/DrawerContent';
 import { withNavigation } from 'react-navigation';
 import io from 'socket.io-client'
@@ -11,20 +11,23 @@ import io from 'socket.io-client'
 import styled from 'styled-components';
 // ! Axios
 import axios from 'axios';
-//import { View } from 'react-native-ui-lib';
+import ChatButton from '../components/Chats/ChatButton' ;
+
 
 class HomeScreen extends Component {
     constructor(props) {
         super(props)
         
+
         this.state = {
             name: '',
             email: '',
-            mongoId: ''
+            mongoId: '',
+            lastMessage: ''
         }
     }
 
-
+    
     
      async componentDidMount() {
         this.socket = io(`http://192.168.0.17:3000`)
@@ -33,13 +36,16 @@ class HomeScreen extends Component {
         const { mongoId } = this.state
         console.log(mongoId)
        
+        global.token = this.props.navigation.state.params.token
     
         const config = {
             headers: {
                 'Content-Type': 'application/json',
-                'x-auth-token': `${this.props.navigation.state.params.token}`
+                'x-auth-token': `${global.token}`
             }
         }
+
+        console.log('TOKEN: ', global.token)
         if(this.mounted) {
             
             try {
@@ -50,18 +56,10 @@ class HomeScreen extends Component {
                     email,
                     mongoId: _id
                 })
+                
             } catch (err) {
                 console.log(err)
             }
-           /* axios.get('http://192.168.0.17:3000/home', config)
-            .then(res => res.data)
-            .then(res => JSON.stringify(res.data))
-            .then(res => JSON.parse(res))
-            .then(response => this.setState({ name: response.name, email: response.email, mongoId: response._id }, () => {
-                this.socket = io(`http://192.168.0.17:3000`)
-                this.mongoID = this.state.mongoId
-            }))
-            .catch(err => console.log(err))*/
         }
        
            
@@ -70,8 +68,11 @@ class HomeScreen extends Component {
 
      componentWillUnmount() {
         this.mounted = false
-        console.log('TOKEN ADENTRO DE UNMOUNT: ', this.props.navigation.state.params.token)
      }
+    
+    handleLastMessage(lastMessage) {
+        this.setState({ lastMessage })
+    }
 
     openDrawer(){
         this._drawer._root.open();
@@ -104,9 +105,9 @@ class HomeScreen extends Component {
             {this.renderHeader()}
 
                 <View style={{backgroundColor: '#355C7D', height: '100%'}}>
-                    <Button style={{color: 'black', flex: 1}} onPress={() => {this.props.navigation.navigate('chat', { socket: this.socket, mongoID: this.mongoID,  })}}>
-                        <Text>Chat</Text>
-                    </Button>
+                    <List>
+                        <ChatButton lastMessage={this.state.lastMessage} onPress={() => {this.props.navigation.navigate('chat', { socket: this.socket, mongoID: this.mongoID, handleLastMessage: this.handleLastMessage })}} />   
+                    </List>
                 </View>
 
        

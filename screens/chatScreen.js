@@ -4,8 +4,8 @@ import { View, Text, TextInput, StyleSheet, KeyboardAvoidingView, TouchableOpaci
 import { Icon, Button } from 'native-base';
 import { Avatar } from 'react-native-paper';
 
-import io from 'socket.io-client'
 import MeMessage from './../components/meMessage'
+import { v4 } from 'uuid'
 
 
 
@@ -20,10 +20,6 @@ class ChatScreen extends React.Component {
             towardId: '',
             sentMessages: []
         }
-    }
-
-    randomNumber() {
-        return Math.floor( 100000 + Math.random() * 999999)
     }
 
     componentDidMount() {
@@ -47,7 +43,7 @@ class ChatScreen extends React.Component {
 
     render() {
 
-        const chatMessages = this.state.sentMessages.map(message => <MeMessage key={message} text={message} />)
+        const chatMessages = this.state.sentMessages.map(message => <MeMessage key={v4()} text={message} />)
 
         return (
             <View style={{height: '100%'}}>

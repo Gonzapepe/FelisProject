@@ -46,6 +46,7 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+app.use('/uploads', express.static('uploads'))
 app.use(cors({ origin: true, credentials: true }))
 
 //conexion a base de datos

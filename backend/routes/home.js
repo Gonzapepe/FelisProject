@@ -1,5 +1,37 @@
 const express = require('express');
 const router = express.Router()
+const multer = require('multer')
+
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './uploads/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, new Date().toISOString().replace(/:/g, '-') +  file.originalname)
+    }
+}) 
+
+const fileFilter = (req, file, cb) => {
+    
+    if( file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' ){
+        cb(null, true)
+    } else {
+        cb(null, false)
+    }
+
+    
+    
+}
+
+const upload = multer({
+     storage: storage, 
+    limits: {
+    fileSize: 1024*1024 * 10
+    },
+    fileFilter: fileFilter
+})
+
 const auth = require('../middleware/auth')
 require('dotenv').config()
 
@@ -8,21 +40,21 @@ require('dotenv').config()
 
 // * Controllers
 const User = require('../controllers/User')
-const user_login = User.userLogin
-const search_contact = User.searchContact
-const add_contact = User.addContact
+
 
 
 // ! Info User Login
 // ! Info Private Access
-router.get('/', auth, (req, res) => user_login(req, res));
+router.get('/', auth,  User.userLogin);
 
 // ! Search Contacts
-router.get('/users', (req, res) => search_contact(req, res));
+router.get('/users', User.searchContact);
 
-// ! Add Contact
-// ! Info Private Access
-router.post('/contacts/:newContactId', auth, (req, res) => add_contact(req, res));
+// ! Receive all Users
+// ! Private access
+router.get('/contacts', auth,  User.getAllUsers)
+
+router.put('/photo', upload.single('avatar'), auth, User.changePhoto)
 
 
 module.exports = router;
