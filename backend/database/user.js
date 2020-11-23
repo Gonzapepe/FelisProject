@@ -43,12 +43,7 @@ const registerSchema = new Schema({
         ref: 'User'
     }],
 
-    notifications: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Notification'
-    }],
-
-    contacs: [{
+    contacts: [{
         type: Schema.Types.ObjectId,
         ref: 'User'
     }]
