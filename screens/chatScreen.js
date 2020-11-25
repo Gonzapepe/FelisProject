@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { View, Text, TextInput, StyleSheet, KeyboardAvoidingView, TouchableOpacity, Dimensions } from 'react-native'
+import { View, Text, TextInput, StyleSheet, KeyboardAvoidingView, TouchableOpacity, ScrollView } from 'react-native'
 
 import { Icon, Button } from 'native-base';
 import { Avatar } from 'react-native-paper';
 
 import MeMessage from './../components/meMessage'
 import { v4 } from 'uuid'
+import axios from 'axios'
 
 
 
@@ -18,11 +19,19 @@ class ChatScreen extends React.Component {
             message: '',
             fromId: '',
             towardId: '',
-            sentMessages: []
+            sentMessages: [],
+            avatar: '',
+            name: ''
         }
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'x-auth-token': `${global.token}`
+            }
+        }
         //Cambiar la ip para el uso propio local
         this.socket = this.props.navigation.state.params.socket
         this.socket.on('messagesChat', message => {
@@ -30,6 +39,14 @@ class ChatScreen extends React.Component {
 
             console.log('desde adentro de componentDidMount', this.socket.id)
         })
+        if(this.props.navigation.state.params.mongoID) {
+            const res = await axios.get(`http://192.168.0.17:3000/home/${this.props.navigation.state.params.mongoID}`, config)
+            console.log('INFORMACION DE USUARIO: ', res.data)
+            this.setState({
+                name: res.data.name,
+                avatar: res.data.avatar
+            })
+        }
          console.log('FROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOM ID', this.props.navigation.state.params.mongoID)
     }
 
@@ -46,7 +63,7 @@ class ChatScreen extends React.Component {
         const chatMessages = this.state.sentMessages.map(message => <MeMessage key={v4()} text={message} />)
 
         return (
-            <View style={{height: '100%'}}>
+            <View style={{height: '100%', position: 'relative'}}>
                 <View style={styles.top} >
                     <Button transparent onPress={ () => this.props.navigation.goBack() }>
                     <Icon 
@@ -57,18 +74,19 @@ class ChatScreen extends React.Component {
                     </Button>
                     <Avatar.Image 
                         source={{
-                            uri: 'https://api.adorable.io/avatars/50/abott@adorable.png'
+                            uri: `http://192.168.0.17:3000/${this.state.avatar}`
                         }}
                         size={50}
                         style={{marginLeft: 10,}}
                     />
-                    <Text style={styles.nombre}>Juan Doe</Text>
+                    <Text style={styles.nombre}>{this.state.name}</Text>
                 </View>
-                <View style={styles.bodyChat} >
+                <View style={styles.embeddingView}>
+                <ScrollView style={styles.bodyChat} >
                     { chatMessages }
-                </View>
+                </ScrollView>
 
-                <KeyboardAvoidingView style={styles.bodyMessages}>
+                <KeyboardAvoidingView style={styles.bodyMessages} behavior='height'>
                    
 
                     
@@ -90,6 +108,7 @@ class ChatScreen extends React.Component {
                 
 
                 </KeyboardAvoidingView >
+                </View>
 
             </View>
         )
@@ -98,7 +117,8 @@ class ChatScreen extends React.Component {
 
 const styles = StyleSheet.create({
     top: {
-        flex: 0.5,
+        flex: 0.1,
+        position: 'relative',
         borderBottomColor: 'white',
         borderBottomWidth: 1,
         backgroundColor: '#355C7D',
@@ -116,9 +136,13 @@ const styles = StyleSheet.create({
 
     bodyMessages: {
         width: '100%',
+        maxHeight: '80%',
         flexDirection: 'row',
         backgroundColor: '#355C7D',
         
+    },
+    embeddingView: {
+        flex: 0.9
     },
     bodyChat: {
         flex: 5,

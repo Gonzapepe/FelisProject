@@ -52,7 +52,12 @@ router.get('/users', User.searchContact);
 
 // ! Receive all Users
 // ! Private access
-router.get('/contacts', auth,  User.getAllUsers)
+router.get('/all-users', auth,  User.getAllUsers)
+// ! Receive all Users Id's
+// ! Private access
+router.get('/contacts', auth, User.getMyContacts)
+// ! Retrieve info from user
+router.get('/:id', auth, User.retrieveInfo)
 
 router.put('/photo', upload.single('avatar'), auth, User.changePhoto)
 

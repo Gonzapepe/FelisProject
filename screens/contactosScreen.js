@@ -4,6 +4,7 @@ import { Header, Button, Left, Right, Title, Container, Icon, Body, Item, Input,
 import { withNavigation } from 'react-navigation'
 import Contacto from '../components/Contacts/ContactCard'
 import ContactModal from '../components/Contacts/ContactModal'
+import Axios from 'axios'
 
 const styles = StyleSheet.create({
     color: {
@@ -31,7 +32,8 @@ class contactosScreen extends React.Component{
         super(props);
         this.state = {
             inputValue: '',
-            isVisible: false
+            isVisible: false,
+            contacts: []
         }
     }
 
@@ -41,12 +43,34 @@ class contactosScreen extends React.Component{
         })
     }
 
+    async componentDidMount() {
+        this.mounted = true
+
+        if(this.mounted) {
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-auth-token': `${global.token}`
+                }
+            }
+
+            const res = await Axios.get('http://192.168.0.17:3000/home/contacts', config)
+
+            this.setState({ contacts: res.data.contacts })
+            console.log('CONTACTOS: ', this.state.contacts)
+        }
+    }
+
     toggleModal() {
         if(this.state.isVisible) {
             this.setState({ isVisible: false })
         } else {
             this.setState({ isVisible: true })
         }
+    }
+
+    componentWillUnmount() {
+        this.mounted = false
     }
 
     render(){
@@ -88,7 +112,9 @@ class contactosScreen extends React.Component{
                     <Input placeholder='Buscar contacto...' value={this.state.inputValue} onChange={e => this.handleChange(e)} />
                     <Icon active type='FontAwesome' name='search' />
                 </Item>
-                    
+                    {
+
+                    }
                     <Contacto message='Esto es un estado' name='Gonzalo Addamo' time='4:50 pm' />
                     <Contacto message='Hola rey' name='Gonzalo Addamo' time='4:50 pm' />
                     <Contacto message='Hola rey' name='Gonzalo Addamo' time='4:50 pm' />

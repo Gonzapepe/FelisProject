@@ -30,7 +30,7 @@ class ContactModal extends React.Component {
             }
         }
 
-        const res = await axios.get('http://192.168.0.17:3000/home/users', config)
+        const res = await axios.get('http://192.168.0.17:3000/home/all-users', config)
 
         this.setState({ contacts: res.data })
         

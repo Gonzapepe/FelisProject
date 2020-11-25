@@ -30,7 +30,9 @@ exports.searchContact =  async (req, res) => {
  exports.userLogin =  async (req, res) => {
     try {
         const data = await User.findById(req.user.id).select('-password')
-
+        if(!data) {
+            res.status(400).json({ error: 'Iniciar sesión requerido.' })
+        }
         res.json({ data })
     } catch (err) {
         res.status(500).json({ msg: err.message });
@@ -50,12 +52,53 @@ exports.getAllUsers = async ( req, res ) => {
 
 exports.changePhoto = async ( req, res ) => {
     try {
-        console.log('REQ FILE: ', req.file)
         const { file } = req
         const updatedAvatar = await User.findByIdAndUpdate(req.user.id, { avatar: file.path }) 
+        if(!updatedAvatar) {
+            res.status(400).json({ error: 'Debes iniciar sesión para poder cambiar tu foto.' })
+        }
         await updatedAvatar.save()
         res.json(updatedAvatar)
     } catch (err) {
         res.status(500).json({ msg: err })
+    }
+}
+
+exports.getMyContacts = async (req, res) => {
+    try {
+
+        // Selecciono mis contactos
+        const myContacts = await User.findById(req.user.id).select('contacts')
+        if(!myContacts) {
+            res.status(400).json({ error: 'Debes iniciar sesión para poder acceder a tus contactos.' })
+        }
+        //creo Array para almacenar la info de los contactos seleccionados mediante su id
+        const contactInfoArray = []
+        //Saco información de los contactos
+        for await (const contactInfo of User.findById(myContacts.contacts).select('-password')) {
+            contactInfoArray.push(contactInfo)
+        }
+
+        res.json(contactInfoArray)
+    } catch (err) {
+        res.status(500).json({ msg: err })
+        console.log('Hubo un error: ', err)
+    }
+}
+
+exports.retrieveInfo = async (req, res) => {
+    try {
+        
+        const { id } = req.params
+        if(!id) {
+            res.status(400).json({ error: 'No existe ese usuario' })
+                }
+        const userInfo = await User.findById(id).select('-password')
+        
+
+        res.json(userInfo)
+    } catch (err) {
+        res.status(500).json({ msg: err })
+        console.log('Hubo un error: ', err)
     }
 }

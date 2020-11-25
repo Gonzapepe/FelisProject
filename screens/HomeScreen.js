@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 
 // ! Components
 import {StyleSheet, View} from 'react-native';
-import { Container, Drawer, Text, List,  Header, Left, Body, Right, Button, Icon } from 'native-base';
+import { Container, Drawer, Text, List,  Header, Content, Button, Icon } from 'native-base';
 import DrawerScreen from '../components/DrawerComponents/DrawerContent';
 import { withNavigation } from 'react-navigation';
 import io from 'socket.io-client'
@@ -23,7 +23,8 @@ class HomeScreen extends Component {
             name: '',
             email: '',
             mongoId: '',
-            lastMessage: ''
+            lastMessage: '',
+            contacts: []
         }
     }
 
@@ -56,6 +57,15 @@ class HomeScreen extends Component {
                     email,
                     mongoId: _id
                 })
+                
+            } catch (err) {
+                console.log(err)
+            }
+
+            try {
+                const res2 = await axios.get('http://192.168.0.17:3000/home/contacts', config)
+                console.log('DATA DE CONTACTOS: ', res2.data)
+                this.setState({ contacts: res2.data })
                 
             } catch (err) {
                 console.log(err)
@@ -103,15 +113,29 @@ class HomeScreen extends Component {
                 onClose={() => this.closeDrawer()}
             >
             {this.renderHeader()}
-
+                <Container>
                 <View style={{backgroundColor: '#355C7D', height: '100%'}}>
+                    <Content>
                     <List>
-                        <ChatButton lastMessage={this.state.lastMessage} onPress={() => {this.props.navigation.navigate('chat', { socket: this.socket, mongoID: this.mongoID, handleLastMessage: this.handleLastMessage })}} />   
+                        {
+                            this.state.contacts ?
+                            this.state.contacts.map( contacto => 
+                            <ChatButton 
+                            key={contacto._id}
+                            avatar={contacto.avatar}
+                            name={contacto.name}
+                            lastMessage={this.state.lastMessage} 
+                            onPress={() => {this.props.navigation.navigate('chat', {  socket: this.socket, mongoID: contacto._id, handleLastMessage: this.handleLastMessage })}} />)
+                            : <Text>No tienes contactos añadidos!</Text>
+                        }
+                        
                     </List>
-                </View>
-
+                    </Content>                        
        
+                </View>
+                </Container>
             </Drawer>
+            
             </>
         )
     }
