@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 require('dotenv').config()
 const validateInputFromLogin = require('../validation/login')
 
-const User = require('../database/user')
+const { User } = require('../database/user')
 
 exports.login = async (req, res) => {
     const {errors, isValid} = validateInputFromLogin(req.body);

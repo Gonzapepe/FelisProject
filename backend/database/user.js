@@ -49,5 +49,22 @@ const registerSchema = new Schema({
     }]
 })
 
-module.exports = User = mongoose.model('User', registerSchema)
+const chatSchema = new Schema({
+    messages: {
+        type: Array,
+        default: []
+    },
+
+    participants: {
+        type: Array,
+        default: []
+    }
+})
+
+module.exports = {
+    User: mongoose.model('User', registerSchema),
+    Chat: mongoose.model('Chat', chatSchema)
+}
+
+
 

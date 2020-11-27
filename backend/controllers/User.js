@@ -1,5 +1,5 @@
 const { findByIdAndUpdate } = require('../database/user')
-const User = require('../database/user')
+const { User } = require('../database/user')
 
 /*const escapeRegex = (text) => {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
@@ -30,9 +30,7 @@ exports.searchContact =  async (req, res) => {
  exports.userLogin =  async (req, res) => {
     try {
         const data = await User.findById(req.user.id).select('-password')
-        if(!data) {
-            res.status(400).json({ error: 'Iniciar sesión requerido.' })
-        }
+        
         res.json({ data })
     } catch (err) {
         res.status(500).json({ msg: err.message });
@@ -41,9 +39,16 @@ exports.searchContact =  async (req, res) => {
 
 exports.getAllUsers = async ( req, res ) => {
     try {
-       const AllUsersButYou = await  User.find({_id: {$ne: req.user.id}}).select('-password')
-       
-       res.json(AllUsersButYou)
+        const You = await User.findOne({_id: req.user.id}).select('contacts')
+        const AllUsersButYou = await  User.find({_id: {$ne: req.user.id}}).select('-password')
+     
+        let filteredContacts = []
+
+        You.contacts.forEach(contacto => {
+           filteredContacts =  AllUsersButYou.filter( user => user._id.toString() !== contacto.toString() )
+        });
+        
+       res.json(filteredContacts)
     } catch (err) {
         res.status(500).json({ msg: err })
         console.log('Hubo un error: ', err)

@@ -1,18 +1,15 @@
 const express = require("express");
 const router = express.Router();
+
+// Middlewares
 const auth = require('../middleware/auth');
+
+// Controllers
+const Chat = require('../controllers/Chat')
 
 // ! Send Message
 // ! Info Private Access
-router.get('/:FromId/:TowardId', auth, async (req, res) => {
-    try {
-        console.log(req.socket);
-        /*req.socket.on('messagesChat',  message => {
-            req.io.emit('messagesChat' , message)
-        })*/
-    } catch (error) {
-
-    }
-});
+router.post('/', auth, Chat.CreateChat);
+router.post('/:id/messages', auth, Chat.NewMessage);
 
 module.exports = router
