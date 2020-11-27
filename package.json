@@ -36,7 +36,8 @@
     "socket.io-client": "^2.3.0",
     "styled-components": "^5.1.0",
     "util": "^0.12.3",
-    "uuidv4": "^6.2.5"
+    "uuidv4": "^6.2.5",
+    "websocket": "^1.0.32"
   },
   "devDependencies": {
     "babel-preset-expo": "~8.1.0",

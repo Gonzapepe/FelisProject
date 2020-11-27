@@ -20,7 +20,7 @@ class Contacto extends React.Component {
                     <List>
                         <ListItem Avatar>
                             <Left style={styles.LeftBody} >
-                                <Thumbnail source={{uri: 'https://api.adorable.io/avatars/50/abott@adorable.png'}} />
+                                <Thumbnail source={{uri: `http://192.168.0.17:3000/${this.props.avatar}`}} />
                             </Left>
                             <Body>
                                 <Text> {this.props.name} </Text>

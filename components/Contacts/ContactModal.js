@@ -23,7 +23,8 @@ class ContactModal extends React.Component {
         
         const config = {
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'x-auth-token': `${global.token}`
             },
             params: {
                 search: this.state.searchField

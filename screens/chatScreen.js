@@ -8,7 +8,12 @@ import MeMessage from './../components/meMessage'
 import { v4 } from 'uuid'
 import axios from 'axios'
 
-
+const config = {
+    headers: {
+        'Content-Type': 'application/json',
+        'x-auth-token': `${global.token}`
+    }
+}
 
 class ChatScreen extends React.Component {
 
@@ -25,36 +30,62 @@ class ChatScreen extends React.Component {
         }
     }
 
-    async componentDidMount() {
-        const config = {
-            headers: {
-                'Content-Type': 'application/json',
-                'x-auth-token': `${global.token}`
-            }
-        }
-        //Cambiar la ip para el uso propio local
-        this.socket = this.props.navigation.state.params.socket
-        this.socket.on('messagesChat', message => {
-            this.setState({ sentMessages: [...this.state.sentMessages, message] })
-
-            console.log('desde adentro de componentDidMount', this.socket.id)
-        })
+    async callApi() {
+        
         if(this.props.navigation.state.params.mongoID) {
             const res = await axios.get(`http://192.168.0.17:3000/home/${this.props.navigation.state.params.mongoID}`, config)
+
+
             console.log('INFORMACION DE USUARIO: ', res.data)
+            
             this.setState({
                 name: res.data.name,
-                avatar: res.data.avatar
+                avatar: res.data.avatar,
+                towardId: this.props.navigation.state.params.mongoID,
+                fromId: this.props.navigation.state.params.myID
+
             })
         }
-         console.log('FROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOM ID', this.props.navigation.state.params.mongoID)
     }
+
+     componentDidMount() {
+        
+        //Cambiar la ip para el uso propio local
+        this.socket = this.props.navigation.state.params.socket
+        
+        this.callApi()
+      
+        this.socket.onmessage = (event) => {
+            const msg = JSON.parse(event.data)
+
+            console.log('parsed messages: ', msg)
+    }
+
+    this.willFocusSubscription = this.props.navigation.addListener(
+        'willFocus',
+        () => {
+            this.callApi()
+        }
+    )
+
+    }
+
+    componentWillUnmount() {
+        this.willFocusSubscription.remove()
+     }
 
 
     HandlePress = () => {
         const { message } = this.state
-        this.socket.emit('messagesChat', message)
+        const msg = {
+            type: 'message',
+            text: message,
+            id: this.state.fromId,
+            date: Date.now()
+        }
+        this.socket.send(JSON.stringify(msg))
         this.setState({ message: '' })
+       // axios.get(`http://192.168.0.17:3000/chat/${this.state.fromId}/${this.state.towardId}`, config)
 
     }
 

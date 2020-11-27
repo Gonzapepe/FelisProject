@@ -12,6 +12,8 @@ import styled from 'styled-components';
 // ! Axios
 import axios from 'axios';
 import ChatButton from '../components/Chats/ChatButton' ;
+// ! WebSocket
+//import { w3cwebsocket as W3CWebSocket } from 'websocket'
 
 
 class HomeScreen extends Component {
@@ -28,16 +30,46 @@ class HomeScreen extends Component {
         }
     }
 
-    
-    
-     async componentDidMount() {
-        this.socket = io(`http://192.168.0.17:3000`)
-        this.mounted = true;
+    async callApi(config) {
+        try {
+            const res = await axios.get('http://192.168.0.17:3000/home', config)
+            const { email, name, _id } = res.data.data
+            this.setState({
+                name,
+                email,
+                mongoId: _id
+            })
+            
+        } catch (err) {
+            console.log(err)
+        }
 
+        try {
+            const res2 = await axios.get('http://192.168.0.17:3000/home/contacts', config)
+            console.log('DATA DE CONTACTOS: ', res2.data)
+            this.setState({ contacts: res2.data })
+            
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    
+    
+     componentDidMount() {
+        //this.socket = io(`http://192.168.0.17:3000`)
+        this.webSocket = new WebSocket('ws://192.168.0.17:3000/ws')
+        this.webSocket.onopen = (event)  => {
+            console.log('Conectado correctamente')
+            
+        }
         const { mongoId } = this.state
         console.log(mongoId)
+        if(!global.token) {
+            global.token = this.props.navigation.state.params.token
+        }
+        
+
        
-        global.token = this.props.navigation.state.params.token
     
         const config = {
             headers: {
@@ -45,39 +77,26 @@ class HomeScreen extends Component {
                 'x-auth-token': `${global.token}`
             }
         }
+        this.callApi(config)
 
         console.log('TOKEN: ', global.token)
-        if(this.mounted) {
+        
             
-            try {
-                const res = await axios.get('http://192.168.0.17:3000/home', config)
-                const { email, name, _id } = res.data.data
-                this.setState({
-                    name,
-                    email,
-                    mongoId: _id
-                })
-                
-            } catch (err) {
-                console.log(err)
-            }
-
-            try {
-                const res2 = await axios.get('http://192.168.0.17:3000/home/contacts', config)
-                console.log('DATA DE CONTACTOS: ', res2.data)
-                this.setState({ contacts: res2.data })
-                
-            } catch (err) {
-                console.log(err)
-            }
-        }
+            
+        
+            this.willFocusSubscription = this.props.navigation.addListener(
+                'willFocus',
+                () => {
+                    this.callApi()
+                }
+            )
        
            
         }
     
 
      componentWillUnmount() {
-        this.mounted = false
+        this.willFocusSubscription.remove()
      }
     
     handleLastMessage(lastMessage) {
@@ -125,7 +144,7 @@ class HomeScreen extends Component {
                             avatar={contacto.avatar}
                             name={contacto.name}
                             lastMessage={this.state.lastMessage} 
-                            onPress={() => {this.props.navigation.navigate('chat', {  socket: this.socket, mongoID: contacto._id, handleLastMessage: this.handleLastMessage })}} />)
+                            onPress={() => {this.props.navigation.navigate('chat', {  socket: this.webSocket, myID: this.state.mongoId, mongoID: contacto._id, handleLastMessage: this.handleLastMessage })}} />)
                             : <Text>No tienes contactos añadidos!</Text>
                         }
                         

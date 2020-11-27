@@ -43,6 +43,13 @@ const styles = StyleSheet.create({
     },
 })
 
+const config = {
+    headers: {
+        'Content-Type': 'multipart/form-data',
+        'x-auth-token': `${global.token}`
+    }
+}
+
 class DrawerScreen extends Component {
 
     constructor() {
@@ -54,35 +61,37 @@ class DrawerScreen extends Component {
             avatar: ''
         }
     }
+
+    async callApi() {
+        try {
+            const res = await axios.get('http://192.168.0.17:3000/home', config)
+            const { email, name, avatar } = res.data.data
+            this.setState({
+                email,
+                name,
+                avatar
+            })
+        } catch (err) {
+            console.log(err)
+        }
+    }
     
     async componentDidMount() {
-        this.mounted = true
-        const config = {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-                'x-auth-token': `${global.token}`
+       
+        this.willFocusSubscription = this.props.navigation.addListener(
+            'willFocus',
+            () => {
+                this.callApi()
             }
-        }
-        if(this.mounted) {
-            try {
-                const res = await axios.get('http://192.168.0.17:3000/home', config)
-                const { email, name, avatar } = res.data.data
-                this.setState({
-                    email,
-                    name,
-                    avatar
-                })
-            } catch (err) {
-                console.log(err)
-            }
+        )
+            
 
             
-        }
         
     }
 
     componentWillUnmount() {
-        this.mounted = false
+        this.willFocusSubscription.remove()
     }
 
     render() {

@@ -56,8 +56,10 @@ class contactosScreen extends React.Component{
 
             const res = await Axios.get('http://192.168.0.17:3000/home/contacts', config)
 
-            this.setState({ contacts: res.data.contacts })
+            this.setState({ contacts: res.data })
             console.log('CONTACTOS: ', this.state.contacts)
+
+        
         }
     }
 
@@ -113,11 +115,12 @@ class contactosScreen extends React.Component{
                     <Icon active type='FontAwesome' name='search' />
                 </Item>
                     {
-
+                        this.state.contacts.map( contacto => 
+                            <Contacto key={contacto._id} avatar={contacto.avatar} message={contacto.estado} name={contacto.name} time='4:50 pm' />
+                            )
                     }
-                    <Contacto message='Esto es un estado' name='Gonzalo Addamo' time='4:50 pm' />
-                    <Contacto message='Hola rey' name='Gonzalo Addamo' time='4:50 pm' />
-                    <Contacto message='Hola rey' name='Gonzalo Addamo' time='4:50 pm' />
+                    
+                    
                 
                 </Content>
 
