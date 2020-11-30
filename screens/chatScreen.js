@@ -26,25 +26,22 @@ class ChatScreen extends React.Component {
             towardId: '',
             sentMessages: [],
             avatar: '',
-            name: ''
+            name: '',
+            isLoading: true
         }
     }
 
-    async callApi() {
+     callApi() {
         
-        if(this.props.navigation.state.params.mongoID) {
-            const res = await axios.get(`http://192.168.0.17:3000/home/${this.props.navigation.state.params.mongoID}`, config)
+        const { mongoID, avatar, name } = this.props.navigation.state.params 
 
-
-            console.log('INFORMACION DE USUARIO: ', res.data)
-            
-            this.setState({
-                name: res.data.name,
-                avatar: res.data.avatar,
-                towardId: this.props.navigation.state.params.mongoID,
-                fromId: this.props.navigation.state.params.myID
-
-            })
+        if(mongoID) {
+           
+           this.setState({
+               avatar,
+               name
+           }) 
+           
         }
     }
 
@@ -85,15 +82,18 @@ class ChatScreen extends React.Component {
         }
         this.socket.send(JSON.stringify(msg))
         this.setState({ message: '' })
-       // axios.get(`http://192.168.0.17:3000/chat/${this.state.fromId}/${this.state.towardId}`, config)
 
     }
 
     render() {
 
         const chatMessages = this.state.sentMessages.map(message => <MeMessage key={v4()} text={message} />)
+        console.log('IMAGEN DEL AVATAR: ', this.state.avatar)
+
 
         return (
+
+            
             <View style={{height: '100%', position: 'relative'}}>
                 <View style={styles.top} >
                     <Button transparent onPress={ () => this.props.navigation.goBack() }>

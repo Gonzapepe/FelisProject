@@ -12,10 +12,6 @@ import RegisterScreen from './screens/RegisterScreen';
 
 import HomeScreen from './screens/HomeScreen';
 
-import { Provider } from 'react-redux';
-
-import { store } from './redux/store';
-
 import chatScreen from './screens/chatScreen';
 
 import ConfigScreen from './screens/ConfigScreen';
@@ -23,6 +19,8 @@ import ConfigScreen from './screens/ConfigScreen';
 import DrawerScreen from './components/DrawerComponents/DrawerContent';
 
 import contactosScreen from './screens/contactosScreen';
+
+import requestScreen from './screens/requestScreen'
 
 
 
@@ -57,6 +55,12 @@ const App = () => {
   const ContactStack = createStackNavigator({
     contact: {
       screen: contactosScreen,
+      navigationOptions: {
+        headerShown: false
+      }
+    },
+    request: {
+      screen: requestScreen,
       navigationOptions: {
         headerShown: false
       }

@@ -19,19 +19,18 @@ exports.login = async (req, res) => {
     try {
         const user = await User.findOne({ email: email })
         const comparedPassword = await bcrypt.compare(password, user.password)
-        console.log('PASSWORD: ', user.password)
         const payload = {
             user: {
                 id: user.id
             }
         }
        
-    
+
         if(comparedPassword) {
             jwt.sign(payload, process.env.SecretToken, (err, token) => {
                 if(err) throw err
 
-                res.json({ token: token })
+                res.json({ token })
             })
         }
     } catch (err) {

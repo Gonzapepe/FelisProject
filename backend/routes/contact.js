@@ -6,6 +6,7 @@ const auth = require('../middleware/auth');
 
 // * PENDING CONTACT
 router.post('/friend-request', auth, Contact.sendFriendRequest);
+router.get('/pending-contacts/:id', auth, Contact.pendingContacts);
 router.post('/accept-friend/:id', auth, Contact.acceptFriend);
 router.delete('/decline-friend/:id', auth, Contact.declineFriend);
 

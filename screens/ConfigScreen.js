@@ -3,6 +3,7 @@ import { View, StyleSheet } from 'react-native'
 import { Container, Drawer, Text, List, ListItem, Switch, Card, Content, Header, Left, Body, Right, Button, Icon } from 'native-base';
 import DrawerScreen from '../components/DrawerComponents/DrawerContent';
 import { Avatar } from 'react-native-paper';
+import axios from 'axios'
 
 
 
@@ -86,6 +87,17 @@ const styles = StyleSheet.create({
 
 class ConfigScreen extends React.Component {
 
+    constructor() {
+        super()
+        
+        this.state = {
+            name: '',
+            email: '',
+            estado: '',
+            avatar: ''
+        }
+    }
+
     openDrawer(){
         this._drawer._root.open();
     }
@@ -94,6 +106,46 @@ class ConfigScreen extends React.Component {
         this._drawer._root.close();
     }
 
+    async callApi(config) {
+        try {
+            const res = await axios.get('http://192.168.0.17:3000/home', config)
+            const { avatar, email, name, estado } = res.data.data
+            this.setState({
+                name,
+                email,
+                avatar,
+                estado
+            })
+            
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+
+     componentDidMount() {
+        
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'x-auth-token': `${global.token}`
+            }
+        }
+
+        this.callApi(config)
+
+        this.willFocusSubscription = this.props.navigation.addListener(
+            'willFocus',
+            () => {
+                this.callApi()
+            }
+        )
+    }
+    
+    componentWillUnmount() {
+        this.willFocusSubscription.remove()
+    }
+    
     renderHeader(){
         return(
             <>
@@ -120,27 +172,28 @@ class ConfigScreen extends React.Component {
                     <View style={styles.view}>
                         <Avatar.Image 
                             source={{
-                                uri: 'https://api.adorable.io/avatars/50/abott@adorable.png'
+                                uri: `http://192.168.0.17:3000/${this.state.avatar}`
                             }}
                             size={110}
                             style={{
                                 marginTop: 50,
                             }}
                         />
-                        <Text style={styles.name}>Juan Doe</Text>
+                        <Text style={styles.name}> {this.state.name} </Text>
                     </View>
 
                     <View style={styles.bottom_view}>
                         <View style={styles.view_estado}>
                             <Text style={styles.estado}>Estado</Text>   
-                            <Text style={styles.estado_frase}>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</Text>
+                            <Text style={styles.estado_frase} > {this.state.estado} </Text>
+                            
                         </View>
 
                         <View style={styles.border}></View>
 
                         <View style={styles.view_email}>
                             <Text style={styles.email}>Email</Text>
-                            <Text style={styles.email_contact}>smurfka3@gmail.com</Text>
+                            <Text style={styles.email_contact}> {this.state.email} </Text>
                         </View>
                     </View>
 

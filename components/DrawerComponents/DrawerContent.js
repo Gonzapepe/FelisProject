@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
 
 const config = {
     headers: {
-        'Content-Type': 'multipart/form-data',
+        'Content-Type': 'application/json',
         'x-auth-token': `${global.token}`
     }
 }
@@ -58,25 +58,17 @@ class DrawerScreen extends Component {
             name: '',
             email: '',
             mongoId: '',
-            avatar: ''
+            avatar: '',
+            isLoading: true
         }
     }
 
-    async callApi() {
-        try {
-            const res = await axios.get('http://192.168.0.17:3000/home', config)
-            const { email, name, avatar } = res.data.data
-            this.setState({
-                email,
-                name,
-                avatar
-            })
-        } catch (err) {
-            console.log(err)
-        }
+     callApi() {
     }
     
-    async componentDidMount() {
+     componentDidMount() {
+
+        this.callApi()
        
         this.willFocusSubscription = this.props.navigation.addListener(
             'willFocus',
@@ -95,7 +87,8 @@ class DrawerScreen extends Component {
     }
 
     render() {
-        console.log('IMAGEN DESDE EL RENDER: ', this.state.avatar)
+        console.log('IMAGEN DESDE EL RENDER: ', this.props.avatar)
+       
         return (
             <View style={{flex: 1, backgroundColor: '#FFF'}}>
                 <View style={styles.drawerContent}>
@@ -104,7 +97,7 @@ class DrawerScreen extends Component {
                             
                             <Avatar.Image 
                                 source={{
-                                    uri: `http://192.168.0.17:3000/${this.state.avatar}`
+                                    uri: `http://192.168.0.17:3000/${this.props.avatar}`
                                 }}
                                 size={50}
                                 style={{
@@ -114,10 +107,10 @@ class DrawerScreen extends Component {
 
                             <View style={{marginLeft: 15, flexDirection: 'column'}}>
                                 <Title style={styles.title}>
-                                    {this.state.name}
+                                    {this.props.name}
                                 </Title>
                                 <Caption style={styles.caption}>
-                                    {this.state.email}
+                                    {this.props.email}
                                 </Caption>
 
 

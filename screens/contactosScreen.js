@@ -116,7 +116,7 @@ class contactosScreen extends React.Component{
                 </Item>
                     {
                         this.state.contacts.map( contacto => 
-                            <Contacto key={contacto._id} avatar={contacto.avatar} message={contacto.estado} name={contacto.name} time='4:50 pm' />
+                            <Contacto key={contacto._id} avatar={contacto.avatar} message={contacto.estado} name={contacto.name} time='4:50 pm'  />
                             )
                     }
                     
@@ -132,7 +132,7 @@ class contactosScreen extends React.Component{
                     </FooterTab>
 
                     <FooterTab>
-                        <Button>
+                        <Button onPress={ () =>  this.props.navigation.navigate('request') } >
                             <Icon name='envelope' type='FontAwesome' />
                         </Button>
                     </FooterTab>

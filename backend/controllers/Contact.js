@@ -2,6 +2,38 @@ const { User } = require('../database/user');
 
 
 // * PENDING CONTACTS
+exports.pendingContacts = async(req, res) => {
+    try {
+        const  { id } = req.params;
+
+
+        const pendingContacts = await User.findById(id, (err, user) => {
+            const getPendingContacts = user.pendingContacts;
+
+            if(err) {
+                return res.status(400).send("Hubo un error al obetner los contactos");
+            }
+
+            getPendingContacts.forEach(async userId => {
+                console.log(userId);
+
+                const pendingUser = await User.findById(userId, (err, user) => {
+                    if(err) {
+                        return res.status(400).send("Hubo un error al obetner el usuario");
+                    }
+                    console.log(user);
+                });
+            });
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send("Error en el servidor");
+    }
+}
+
+
+
 exports.sendFriendRequest = async(req, res) => {   
     try {
        const { email } = req.body;
@@ -76,7 +108,8 @@ exports.sendFriendRequest = async(req, res) => {
         return res.status(500).send("Hubo un error");
     }
 }
- 
+
+
 exports.acceptFriend = async(req,res) => {
     try {
         const { id } = req.params;
