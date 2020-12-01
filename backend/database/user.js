@@ -43,6 +43,11 @@ const registerSchema = new Schema({
         ref: 'User'
     }],
 
+    addedByYou: [{  
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+    
     contacts: [{
         type: Schema.Types.ObjectId,
         ref: 'User'

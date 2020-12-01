@@ -3,33 +3,36 @@ const { User } = require('../database/user');
 
 // * PENDING CONTACTS
 exports.pendingContacts = async(req, res) => {
-    try {
-        const  { id } = req.params;
+    const  { id } = req.params;
+    
+    const user = await User.findById(id);
 
+    if(!user){
+        res.status(400).send("ERROR")
+    }
 
-        const pendingContacts = await User.findById(id, (err, user) => {
-            const getPendingContacts = user.pendingContacts;
+    async function returningContacts() {
+        var contacts = [];
+        var data;
 
-            if(err) {
-                return res.status(400).send("Hubo un error al obetner los contactos");
+        for(var i = 0; i <= user.pendingContacts.length - 1; i++) {
+            const userId = user.pendingContacts[i];
+
+            const contact = await User.findById(userId);
+            
+            const { name, avatar, email, _id, estado, tag, date } = contact; 
+
+            data = {
+                name, avatar, email, _id, estado, tag, date
             }
 
-            getPendingContacts.forEach(async userId => {
-                console.log(userId);
+            contacts.push(data);
+        }
 
-                const pendingUser = await User.findById(userId, (err, user) => {
-                    if(err) {
-                        return res.status(400).send("Hubo un error al obetner el usuario");
-                    }
-                    console.log(user);
-                });
-            });
-        });
-
-    } catch (error) {
-        console.log(error);
-        return res.status(500).send("Error en el servidor");
+       res.json(contacts);
     }
+
+    returningContacts();  
 }
 
 
@@ -76,10 +79,10 @@ exports.sendFriendRequest = async(req, res) => {
         // * Agregar el usuario como contacto pendiente
         if(userAdder.pendingContacts.length === 0) {
             // * Usuario al que se añade
-            await User.findByIdAndUpdate(user._id, {$push: {pendingContacts: userAdder._id.toString()}}, {upsert: true, new: true});
+            await User.findByIdAndUpdate(user._id, {$push: {addedByYou: userAdder._id.toString()}}, {upsert: true, new: true});
 
             // * Usuario que añade
-            await User.findByIdAndUpdate(userAdder._id, {$push: {pendingContacts: user._id.toString()}}, {upsert: true, new: true});
+            await User.findByIdAndUpdate(userAdder._id, {$push: {addedByYou: user._id.toString()}}, {upsert: true, new: true});
 
             res.status(200).send("Solicitud enviada satisfactoriamente");
         } else {
@@ -94,10 +97,10 @@ exports.sendFriendRequest = async(req, res) => {
                 return res.status(400).send("Este usuario ya fue añadido");
             } else {
                 // * Usuario al que se añade
-                await User.findByIdAndUpdate(user._id, {$push: {pendingContacts: userAdder._id.toString()}}, {upsert: true, new: true});
+                await User.findByIdAndUpdate(user._id, {$push: {addedByYou: userAdder._id.toString()}}, {upsert: true, new: true});
 
                 // * Usuario que añade
-                await User.findByIdAndUpdate(userAdder._id, {$push: {pendingContacts: user._id.toString()}}, {upsert: true, new: true});
+                await User.findByIdAndUpdate(userAdder._id, {$push: {addedByYou: user._id.toString()}}, {upsert: true, new: true});
 
                 res.status(200).send("Solicitud enviada satisfactoriamente");
             }
@@ -131,10 +134,10 @@ exports.acceptFriend = async(req,res) => {
 
             if(userAccepter.contacts.length === 0){
                 // * Usuario que acepta
-                await User.findByIdAndUpdate(userAccepter._id, {$push: {contacts: userAccepted._id.toString()}, $pull: {pendingContacts: userAccepted._id.toString()}}, {upsert: true, new: true});
+                await User.findByIdAndUpdate(userAccepter._id, {$push: {contacts: userAccepted._id.toString()}, $pull: {pendingContacts: userAccepted._id.toString(), addedByYou: userAccepted._id.toString()}}, {upsert: true, new: true});
 
                 // * Usuario que es aceptado
-                await User.findByIdAndUpdate(userAccepted._id, {$push: {contacts: userAccepter._id.toString()}, $pull: {pendingContacts: userAccepter._id.toString()}}, {upsert: true, new: true});
+                await User.findByIdAndUpdate(userAccepted._id, {$push: {contacts: userAccepter._id.toString()}, $pull: {pendingContacts: userAccepted._id.toString(), addedByYou: userAccepted._id.toString()}}, {upsert: true, new: true});
 
                 res.status(200).send("Usuario aceptado satisfactoriamente");
             } else {
@@ -149,10 +152,10 @@ exports.acceptFriend = async(req,res) => {
                     return res.status(400).send("Usuario anteriormente aceptado");
                 } else {
                     // * Usuario que acepta
-                    await User.findByIdAndUpdate(userAccepter._id, {$push: {contacts: userAccepted._id.toString()}, $pull: {pendingContacts: userAccepted._id.toString()}}, {upsert: true, new: true});
+                    await User.findByIdAndUpdate(userAccepter._id, {$push: {contacts: userAccepted._id.toString()}, $pull: {pendingContacts: userAccepted._id.toString(), addedByYou: userAccepted._id.toString()}}, {upsert: true, new: true});
 
                     // * Usuario que es aceptado
-                    await User.findByIdAndUpdate(userAccepted._id, {$push: {contacts: userAccepter._id.toString()}, $pull: {pendingContacts: userAccepter._id.toString()}}, {upsert: true, new: true});
+                    await User.findByIdAndUpdate(userAccepted._id, {$push: {contacts: userAccepter._id.toString()}, $pull: {pendingContacts: userAccepted._id.toString(), addedByYou: userAccepted._id.toString()}}, {upsert: true, new: true});
 
                     res.status(200).send("Usuario aceptado satisfactoriamente");
                 }
@@ -196,10 +199,10 @@ exports.declineFriend = async(req, res) => {
 
             if(declined === true) {
                 // * Usuario que declina
-                await User.findByIdAndUpdate(req.user.id, {$pull: {pendingContacts: userDeclined._id.toString()}});
+                await User.findByIdAndUpdate(req.user.id, {$pull: {pendingContacts: userAccepted._id.toString(), addedByYou: userAccepted._id.toString()}});
                 
                 // * Usuario declinado
-                await User.findByIdAndUpdate(id, {$pull: {pendingContacts: userDecliner._id.toString()}});
+                await User.findByIdAndUpdate(id, {$pull: {pendingContacts: userAccepted._id.toString(), addedByYou: userAccepted._id.toString()}});
 
                 res.status(200).send("Usuario declinado satisfactoriamente");
             }
