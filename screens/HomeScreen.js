@@ -39,7 +39,7 @@ class HomeScreen extends Component {
             const res = await axios.get('http://192.168.0.17:3000/home', config)
             const res2 = await axios.get('http://192.168.0.17:3000/home/contacts', config)
             console.log('DATA DE CONTACTOS: ', res2.data)
-            const { email, name, _id, avatar } = res.data.data
+            const { email, name, _id, avatar } = res.data
             this.setState({
                 name,
                 email,

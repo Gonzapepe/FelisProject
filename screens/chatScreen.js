@@ -25,8 +25,6 @@ class ChatScreen extends React.Component {
             fromId: '',
             towardId: '',
             sentMessages: [],
-            avatar: '',
-            name: '',
             isLoading: true
         }
     }

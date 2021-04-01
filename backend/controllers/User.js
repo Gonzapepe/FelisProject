@@ -31,7 +31,7 @@ exports.searchContact =  async (req, res) => {
     try {
         const data = await User.findById(req.user.id).select('-password')
         
-        res.json({ data })
+        res.json(data)
     } catch (err) {
         res.status(500).json({ msg: err.message });
     }

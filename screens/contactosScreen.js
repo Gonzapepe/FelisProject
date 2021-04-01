@@ -43,10 +43,15 @@ class contactosScreen extends React.Component{
         })
     }
 
-    async componentDidMount() {
-        this.mounted = true
+    async callApi(config) {
+        const res = await Axios.get('http://192.168.0.17:3000/home/contacts', config)
 
-        if(this.mounted) {
+        this.setState({ contacts: res.data })
+        console.log('CONTACTOS: ', this.state.contacts)
+    }
+
+    componentDidMount() {
+       
             const config = {
                 headers: {
                     'Content-Type': 'application/json',
@@ -54,13 +59,15 @@ class contactosScreen extends React.Component{
                 }
             }
 
-            const res = await Axios.get('http://192.168.0.17:3000/home/contacts', config)
+         this.callApi(config)
 
-            this.setState({ contacts: res.data })
-            console.log('CONTACTOS: ', this.state.contacts)
-
+         this.willFocusSubscription = this.props.navigation.addListener(
+            'willFocus',
+            () => {
+                this.callApi(config)
+            }
+        )
         
-        }
     }
 
     toggleModal() {
@@ -72,7 +79,7 @@ class contactosScreen extends React.Component{
     }
 
     componentWillUnmount() {
-        this.mounted = false
+        this.willFocusSubscription.remove()
     }
 
     render(){
